@@ -139,6 +139,19 @@ class PekerjaanSdaController extends Controller
         ]);
 
         $fotoPaths = $pekerjaan->photo ? json_decode($pekerjaan->photo, true) : [];
+        
+        if ($request->has('hapus_foto')) {
+            $hapusIndexes = $request->input('hapus_foto');
+            rsort($hapusIndexes);
+            foreach ($hapusIndexes as $index) {
+                if (isset($fotoPaths[$index])) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($fotoPaths[$index]);
+                    unset($fotoPaths[$index]);
+                }
+            }
+            $fotoPaths = array_values($fotoPaths);
+        }
+
         if ($request->hasFile('photo')) {
             foreach ($request->file('photo') as $file) {
                 $path = $file->store('pekerjaan_photos', 'public');

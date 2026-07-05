@@ -149,6 +149,29 @@
                     <input type="number" name="tahun_dikerjakan" value="{{ old('tahun_dikerjakan', $pekerjaan->tahun_dikerjakan) }}" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
                 </div>
             </div>
+
+            @if($pekerjaan->photo)
+                @php $fotos = json_decode($pekerjaan->photo, true); @endphp
+                @if(is_array($fotos) && count($fotos) > 0)
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 10px;">Foto Progress Saat Ini</label>
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                            @foreach($fotos as $index => $f)
+                                <div style="position: relative; width: 120px; height: 120px; border-radius: 8px; overflow: hidden; border: 1px solid #d1d5db; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                    <img src="{{ Storage::url($f) }}" alt="Foto Progress" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <div style="position: absolute; top: 6px; right: 6px; background: rgba(255,255,255,0.95); border-radius: 6px; padding: 4px 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                        <label style="font-size: 11px; font-weight: 700; color: #dc2626; cursor: pointer; display: flex; align-items: center; gap: 4px; margin: 0;">
+                                            <input type="checkbox" name="hapus_foto[]" value="{{ $index }}" style="width: 14px; height: 14px; cursor: pointer;">
+                                            Hapus
+                                        </label>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <small style="color: #6b7280; margin-top: 8px; display: block;">*Centang tombol hapus pada foto yang ingin dibuang.</small>
+                    </div>
+                @endif
+            @endif
             
             <div style="margin-bottom: 30px;">
                 <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Upload Foto Progress Terbaru (Bisa lebih dari 1)</label>
@@ -241,7 +264,7 @@
                 alert("Gagal mendapatkan lokasi GPS: " + error.message + ". Pastikan Anda memberikan izin akses lokasi pada browser.");
             }, {
                 enableHighAccuracy: true,
-                timeout: 10000,
+                timeout: 30000,
                 maximumAge: 0
             });
         } else {
