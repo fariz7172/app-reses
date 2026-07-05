@@ -145,10 +145,10 @@
             <!-- BEFORE -->
             <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px;">
                 <h4 style="font-size: 14px; font-weight: 700; color: #dc2626; margin-bottom: 4px; text-align: center;">KONDISI BEFORE (SEBELUM)</h4>
-                <p style="font-size: 11px; color: #64748b; text-align: center; margin-bottom: 16px;">Dari data Surat Permohonan</p>
-                
-                @if($pekerjaan->suratPermohonan && $pekerjaan->suratPermohonan->photo)
-                    @php $fotosBefore = json_decode($pekerjaan->suratPermohonan->photo, true); @endphp
+                <p style="font-size: 11px; color: #64748b; text-align: center; margin-bottom: 16px;">Dari data Survei Reses</p>
+
+                @if($pekerjaan->surveiReses && $pekerjaan->surveiReses->foto)
+                    @php $fotosBefore = json_decode($pekerjaan->surveiReses->foto, true); @endphp
                     @if(is_array($fotosBefore) && count($fotosBefore) > 0)
                         <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
                             @foreach($fotosBefore as $fb)
@@ -159,17 +159,17 @@
                         <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada foto yang diunggah</div>
                     @endif
                 @else
-                    <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada data Surat Permohonan yang terkait</div>
+                    <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada data Survei Reses yang terkait</div>
                 @endif
             </div>
 
             <!-- AFTER -->
             <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px;">
                 <h4 style="font-size: 14px; font-weight: 700; color: #16a34a; margin-bottom: 4px; text-align: center;">KONDISI AFTER (SESUDAH)</h4>
-                <p style="font-size: 11px; color: #64748b; text-align: center; margin-bottom: 16px;">Dari data Survei Reses</p>
-
-                @if($pekerjaan->surveiReses && $pekerjaan->surveiReses->foto)
-                    @php $fotosAfter = json_decode($pekerjaan->surveiReses->foto, true); @endphp
+                <p style="font-size: 11px; color: #64748b; text-align: center; margin-bottom: 16px;">Dari data Surat Permohonan (Laporan)</p>
+                
+                @if($pekerjaan->suratPermohonan && $pekerjaan->suratPermohonan->photo)
+                    @php $fotosAfter = json_decode($pekerjaan->suratPermohonan->photo, true); @endphp
                     @if(is_array($fotosAfter) && count($fotosAfter) > 0)
                         <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
                             @foreach($fotosAfter as $fa)
@@ -180,7 +180,7 @@
                         <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada foto yang diunggah</div>
                     @endif
                 @else
-                    <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada data Survei Reses yang terkait</div>
+                    <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada data Surat Permohonan yang terkait</div>
                 @endif
             </div>
         </div>
