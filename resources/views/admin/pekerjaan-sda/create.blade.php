@@ -3,6 +3,7 @@
 @section('content')
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
 <div class="content-card">
     <div class="content-card-header">
@@ -120,6 +121,14 @@
             <div style="margin-bottom: 20px;">
                 <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Titik Kordinat Lokasi (Klik pada peta)</label>
                 <div id="map" style="height: 300px; width: 100%; border-radius: 8px; border: 1px solid #d1d5db; margin-bottom: 10px; z-index: 1;"></div>
+                
+                <div style="margin-bottom: 12px; text-align: right;">
+                    <button type="button" onclick="getCurrentLocation()" style="background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+                        Gunakan Lokasi Saya Saat Ini (GPS)
+                    </button>
+                </div>
+
                 <div style="display: flex; gap: 10px;">
                     <div style="flex: 1;">
                         <label style="display: block; font-size: 12px; color: #6b7280; margin-bottom: 4px;">Latitude</label>
@@ -181,6 +190,7 @@
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 <script>
     // Leaflet Map Initialization
     let initialLat = document.getElementById('lat').value || -6.1112; // Tanjung Priok default
@@ -191,6 +201,24 @@
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
+
+    // Add Geocoder Search Box
+    var geocoder = L.Control.geocoder({
+        defaultMarkGeocode: false,
+        placeholder: 'Cari lokasi...'
+    })
+    .on('markgeocode', function(e) {
+        var center = e.geocode.center;
+        map.setView(center, 16);
+        
+        if(marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker(center, {draggable: true}).addTo(map);
+        updateInputs(center.lat, center.lng);
+        setupMarkerEvents();
+    })
+    .addTo(map);
 
     let marker = null;
     if(document.getElementById('lat').value && document.getElementById('lng').value) {
@@ -217,6 +245,33 @@
     function updateInputs(lat, lng) {
         document.getElementById('lat').value = lat.toFixed(6);
         document.getElementById('lng').value = lng.toFixed(6);
+    }
+
+    // Geolocation API (GPS)
+    function getCurrentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                let lat = position.coords.latitude;
+                let lng = position.coords.longitude;
+                
+                map.setView([lat, lng], 17);
+                
+                if(marker) {
+                    map.removeLayer(marker);
+                }
+                marker = L.marker([lat, lng], {draggable: true}).addTo(map);
+                updateInputs(lat, lng);
+                setupMarkerEvents();
+            }, function(error) {
+                alert("Gagal mendapatkan lokasi GPS: " + error.message + ". Pastikan Anda memberikan izin akses lokasi pada browser.");
+            }, {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            });
+        } else {
+            alert("Fitur Geolocation tidak didukung oleh browser Anda.");
+        }
     }
 
     // Auto Geocode from Address/Kelurahan
