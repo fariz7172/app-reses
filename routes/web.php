@@ -1,11 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PekerjaanSdaController;
 use App\Http\Controllers\Admin\SuratPermohonanController;
 use App\Http\Controllers\Admin\SurveiResesController;
 use App\Http\Controllers\Admin\MasterDataController;
+use App\Http\Controllers\Admin\UsulanMasyarakatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,13 +20,13 @@ Route::get('/', function () {
     return redirect('/admin/dashboard');
 });
 
-// Dummy logout route (development)
-Route::post('/logout', function () {
-    return redirect('/admin/dashboard');
-})->name('logout');
+// Authentication Routes
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Admin Routes (tanpa auth untuk development/preview)
-Route::prefix('admin')->name('admin.')->group(function () {
+// Admin Routes (Protected by Auth)
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -32,6 +34,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('pekerjaan-sda/map', [PekerjaanSdaController::class, 'mapView'])->name('pekerjaan-sda.map');
     Route::resource('pekerjaan-sda', PekerjaanSdaController::class);
     Route::resource('surat-permohonan', SuratPermohonanController::class);
+    Route::post('usulan-masyarakat/{id}/terima', [UsulanMasyarakatController::class, 'terimaUsulan'])->name('usulan-masyarakat.terima');
+    Route::resource('usulan-masyarakat', UsulanMasyarakatController::class);
     
     // Master Data Routes
     Route::prefix('master')->name('master.')->group(function () {

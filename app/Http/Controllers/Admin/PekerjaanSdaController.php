@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PekerjaanSda;
 use App\Models\SurveiReses;
+use App\Models\SuratPermohonan;
 use App\Models\Dewan;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
@@ -87,7 +88,18 @@ class PekerjaanSdaController extends Controller
             }
         }
 
-        return redirect()->route('admin.pekerjaan-sda.index')->with('success', 'Data Pekerjaan SDA berhasil disimpan!');
+        // Auto-Generate Surat Permohonan
+        SuratPermohonan::create([
+            'id_pekerjaan_sda' => $pekerjaan->id,
+            'tanggal' => date('Y-m-d'),
+            'status' => 'Menunggu',
+            'id_kecamatan' => $pekerjaan->id_kecamatan,
+            'id_kelurahan' => $pekerjaan->id_kelurahan,
+            'lokasi' => $pekerjaan->alamat,
+            'deskripsi' => $pekerjaan->deskripsi,
+        ]);
+
+        return redirect()->route('admin.pekerjaan-sda.index')->with('success', 'Data Pekerjaan SDA berhasil disimpan dan draf Surat Permohonan otomatis dibuat!');
     }
 
     public function show(string $id)

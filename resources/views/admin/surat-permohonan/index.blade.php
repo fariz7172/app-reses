@@ -3,12 +3,8 @@
 @section('content')
 <div class="content-card">
     <div class="content-card-header" style="display: flex; justify-content: space-between; align-items: center;">
-        <h2 class="content-card-title">Daftar Surat Permohonan</h2>
+        <h2 class="content-card-title">Daftar Surat Permohonan (Auto-Generated)</h2>
         <div>
-            <a href="{{ route('admin.surat-permohonan.create') }}" class="btn btn-primary" style="padding: 10px 16px; font-size: 14px;">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="16" height="16" style="display:inline; margin-right:4px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                Buat Surat Baru
-            </a>
         </div>
     </div>
     
