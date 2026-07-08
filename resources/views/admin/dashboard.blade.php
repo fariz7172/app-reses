@@ -49,43 +49,42 @@
 ==================================================== --}}
 <div class="grid-4col mb-16">
 
-    {{-- Card 1 --}}
+    {{-- Card 1: Pekerjaan SDA --}}
     <div class="stat-card">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:#e8f4fd;display:flex;align-items:center;justify-content:center;">
                 <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;color:#1591DC;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                 </svg>
             </div>
-            <span class="badge badge-info">+12.5%</span>
         </div>
-        <p style="font-size:10.5px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px;">Total Pengguna</p>
-        <p style="font-size:26px;font-weight:700;color:#1f2937;margin:0 0 6px;line-height:1;">2,847</p>
+        <p style="font-size:10.5px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px;">Total Pekerjaan SDA</p>
+        <p style="font-size:26px;font-weight:700;color:#1f2937;margin:0 0 6px;line-height:1;">{{ number_format($totalPekerjaan, 0, ',', '.') }}</p>
         <p style="font-size:11px;color:#16a34a;display:flex;align-items:center;gap:4px;margin:0;">
-            <svg xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-            +342 bulan ini
+            Total titik pekerjaan terdaftar
         </p>
     </div>
 
-    {{-- Card 2 --}}
+    {{-- Card 2: Usulan Masyarakat --}}
     <div class="stat-card">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:#dceee2;display:flex;align-items:center;justify-content:center;">
                 <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;color:#3f7a58;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                 </svg>
             </div>
-            <span class="badge badge-success">Aktif</span>
+            @if($usulanMenunggu > 0)
+                <span class="badge badge-warning">{{ $usulanMenunggu }} Menunggu</span>
+            @endif
         </div>
-        <p style="font-size:10.5px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px;">Total Produk</p>
-        <p style="font-size:26px;font-weight:700;color:#1f2937;margin:0 0 6px;line-height:1;">1,204</p>
+        <p style="font-size:10.5px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px;">Usulan Masyarakat</p>
+        <p style="font-size:26px;font-weight:700;color:#1f2937;margin:0 0 6px;line-height:1;">{{ number_format($totalUsulan, 0, ',', '.') }}</p>
         <p style="font-size:11px;color:#3f7a58;display:flex;align-items:center;gap:4px;margin:0;">
-            <svg xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-            +58 produk baru
+            Total aduan masyarakat
         </p>
     </div>
 
-    {{-- Card 3 --}}
+    {{-- Card 3: Survei Reses --}}
     <div class="stat-card">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:#fef9c3;display:flex;align-items:center;justify-content:center;">
@@ -93,157 +92,47 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/>
                 </svg>
             </div>
-            <span class="badge badge-warning">5 Pending</span>
         </div>
-        <p style="font-size:10.5px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px;">Total Pesanan</p>
-        <p style="font-size:26px;font-weight:700;color:#1f2937;margin:0 0 6px;line-height:1;">586</p>
+        <p style="font-size:10.5px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px;">Hasil Survei Reses</p>
+        <p style="font-size:26px;font-weight:700;color:#1f2937;margin:0 0 6px;line-height:1;">{{ number_format($totalReses, 0, ',', '.') }}</p>
         <p style="font-size:11px;color:#a16207;display:flex;align-items:center;gap:4px;margin:0;">
-            <svg xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-            +87 bulan ini
+            Data hasil reses dewan
         </p>
     </div>
 
-    {{-- Card 4 --}}
+    {{-- Card 4: Surat Permohonan --}}
     <div class="stat-card">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:#dcfce7;display:flex;align-items:center;justify-content:center;">
                 <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;color:#16a34a;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
             </div>
-            <span class="badge badge-success">+8.2%</span>
         </div>
-        <p style="font-size:10.5px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px;">Pendapatan</p>
-        <p style="font-size:22px;font-weight:700;color:#1f2937;margin:0 0 6px;line-height:1;">Rp 48,2 Jt</p>
+        <p style="font-size:10.5px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px;">Surat Permohonan</p>
+        <p style="font-size:22px;font-weight:700;color:#1f2937;margin:0 0 6px;line-height:1;">{{ number_format($totalSurat, 0, ',', '.') }}</p>
         <p style="font-size:11px;color:#16a34a;display:flex;align-items:center;gap:4px;margin:0;">
-            <svg xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-            vs bulan lalu
+            Surat permohonan survei
         </p>
     </div>
 
 </div>
 
-{{-- ====================================================
-     CHART + CATEGORIES
-==================================================== --}}
-<div class="grid-3col-main mb-16">
-
-    {{-- Bar Chart --}}
-    <div class="content-card">
-        <div class="content-card-header">
-            <div>
-                <p class="content-card-title">Grafik Penjualan</p>
-                <p style="font-size:12px;color:#9ca3af;margin:3px 0 0;">Performa 7 hari terakhir</p>
-            </div>
-            <div style="display:flex;gap:8px;">
-                <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px;">Minggu</button>
-                <button class="btn btn-primary" style="font-size:12px;padding:5px 12px;">Bulan</button>
-            </div>
-        </div>
-        <div style="padding:20px;">
-            @php
-            $bars = [
-                ['day'=>'Sen','pct'=>45,'val'=>'Rp 4,5Jt','top'=>false],
-                ['day'=>'Sel','pct'=>72,'val'=>'Rp 7,2Jt','top'=>false],
-                ['day'=>'Rab','pct'=>58,'val'=>'Rp 5,8Jt','top'=>false],
-                ['day'=>'Kam','pct'=>90,'val'=>'Rp 9,0Jt','top'=>true],
-                ['day'=>'Jum','pct'=>65,'val'=>'Rp 6,5Jt','top'=>false],
-                ['day'=>'Sab','pct'=>80,'val'=>'Rp 8,0Jt','top'=>false],
-                ['day'=>'Min','pct'=>38,'val'=>'Rp 3,8Jt','top'=>false],
-            ];
-            @endphp
-            {{-- Chart bars --}}
-            <div style="display:flex;align-items:flex-end;gap:8px;height:140px;margin-bottom:8px;">
-                @foreach($bars as $b)
-                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;">
-                    <div style="flex:1;width:100%;display:flex;align-items:flex-end;">
-                        <div class="chart-bar-item"
-                             data-val="{{ $b['val'] }}"
-                             style="width:100%;height:{{ $b['pct'] }}%;
-                                    background:{{ $b['top'] ? '#1591DC' : '#1F6F5F' }};
-                                    border-radius:6px 6px 0 0;
-                                    cursor:pointer;position:relative;
-                                    transition:opacity 0.18s;"
-                             onmouseover="showBarTooltip(this)"
-                             onmouseout="hideBarTooltip(this)">
-                            <div class="bar-tooltip"
-                                 style="position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
-                                        background:#1f2937;color:#fff;font-size:10px;font-weight:600;
-                                        padding:3px 7px;border-radius:6px;white-space:nowrap;
-                                        opacity:0;pointer-events:none;transition:opacity 0.18s;">
-                                {{ $b['val'] }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-            {{-- Day labels --}}
-            <div style="display:flex;gap:8px;">
-                @foreach($bars as $b)
-                <div style="flex:1;text-align:center;font-size:11px;color:#9ca3af;font-weight:500;">{{ $b['day'] }}</div>
-                @endforeach
-            </div>
-            {{-- Legend --}}
-            <div style="display:flex;gap:16px;margin-top:16px;padding-top:14px;border-top:1px solid #f3f4f6;">
-                <div style="display:flex;align-items:center;gap:6px;">
-                    <div style="width:10px;height:10px;border-radius:3px;background:#1F6F5F;"></div>
-                    <span style="font-size:12px;color:#6b7280;">Penjualan</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:6px;">
-                    <div style="width:10px;height:10px;border-radius:3px;background:#1591DC;"></div>
-                    <span style="font-size:12px;color:#6b7280;">Tertinggi</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Categories --}}
-    <div class="content-card">
-        <div class="content-card-header">
-            <p class="content-card-title">Kategori Teratas</p>
-            <a href="#" style="font-size:12px;font-weight:600;color:#1591DC;text-decoration:none;">Semua →</a>
-        </div>
-        <div style="padding:16px 20px;">
-            @php
-            $cats = [
-                ['name'=>'Elektronik', 'pct'=>78,'val'=>'Rp 18,4Jt','color'=>'#1591DC'],
-                ['name'=>'Fashion',    'pct'=>62,'val'=>'Rp 12,1Jt','color'=>'#1F6F5F'],
-                ['name'=>'Makanan',    'pct'=>48,'val'=>'Rp 9,3Jt', 'color'=>'#f59e0b'],
-                ['name'=>'Olahraga',  'pct'=>35,'val'=>'Rp 6,8Jt', 'color'=>'#8b5cf6'],
-                ['name'=>'Kecantikan','pct'=>21,'val'=>'Rp 4,1Jt', 'color'=>'#ec4899'],
-            ];
-            @endphp
-            @foreach($cats as $cat)
-            <div style="margin-bottom:16px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                    <span style="font-size:13px;font-weight:500;color:#374151;">{{ $cat['name'] }}</span>
-                    <span style="font-size:12px;font-weight:600;color:#6b7280;">{{ $cat['pct'] }}%</span>
-                </div>
-                <div class="progress-track">
-                    <div class="progress-fill" style="width:0%;background:{{ $cat['color'] }};" data-width="{{ $cat['pct'] }}%"></div>
-                </div>
-                <p style="font-size:11px;color:#9ca3af;margin:4px 0 0;">{{ $cat['val'] }}</p>
-            </div>
-            @endforeach
-        </div>
-    </div>
-
-</div>
+{{-- CHATS & KATEGORI (Dihapus karena digantikan data real SDA) --}}
 
 {{-- ====================================================
      TABLE + ACTIVITY
 ==================================================== --}}
 <div class="grid-3col-bottom mb-16">
 
-    {{-- Orders Table --}}
+    {{-- Pekerjaan SDA Terbaru Table --}}
     <div class="content-card">
         <div class="content-card-header">
             <div>
-                <p class="content-card-title">Pesanan Terbaru</p>
-                <p style="font-size:12px;color:#9ca3af;margin:3px 0 0;">5 transaksi terakhir</p>
+                <p class="content-card-title">Pekerjaan SDA Terbaru</p>
+                <p style="font-size:12px;color:#9ca3af;margin:3px 0 0;">5 data terakhir ditambahkan</p>
             </div>
-            <a href="{{ url('/admin/orders') }}" class="btn btn-ghost" style="font-size:12px;padding:5px 12px;">
+            <a href="{{ route('admin.pekerjaan-sda.index') }}" class="btn btn-ghost" style="font-size:12px;padding:5px 12px;">
                 Lihat Semua →
             </a>
         </div>
@@ -251,93 +140,83 @@
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Pelanggan</th>
-                        <th>Produk</th>
-                        <th>Total</th>
-                        <th>Status</th>
+                        <th>Tgl Input</th>
+                        <th>Kecamatan</th>
+                        <th>Kategori</th>
+                        <th>Lokasi</th>
+                        <th>Status / Progress</th>
                         <th style="text-align:right;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                    $orders = [
-                        ['id'=>'#ORD-4521','name'=>'Budi Santoso',  'av'=>'B','prod'=>'Laptop Acer',    'total'=>'Rp 8.500.000','st'=>'Selesai','b'=>'badge-success'],
-                        ['id'=>'#ORD-4520','name'=>'Siti Rahayu',   'av'=>'S','prod'=>'Headphone Sony', 'total'=>'Rp 1.250.000','st'=>'Proses', 'b'=>'badge-info'],
-                        ['id'=>'#ORD-4519','name'=>'Ahmad Fauzi',   'av'=>'A','prod'=>'Smartphone Oppo','total'=>'Rp 3.750.000','st'=>'Pending','b'=>'badge-warning'],
-                        ['id'=>'#ORD-4518','name'=>'Dewi Lestari',  'av'=>'D','prod'=>'Sepatu Nike',    'total'=>'Rp 890.000',  'st'=>'Selesai','b'=>'badge-success'],
-                        ['id'=>'#ORD-4517','name'=>'Rudi Hartono',  'av'=>'R','prod'=>'Kemeja Polo',    'total'=>'Rp 350.000',  'st'=>'Batal',  'b'=>'badge-danger'],
-                    ];
-                    @endphp
-                    @foreach($orders as $o)
+                    @foreach($pekerjaanTerbaru as $p)
                     <tr>
-                        <td><span style="font-family:monospace;font-size:12px;font-weight:600;color:#1591DC;">{{ $o['id'] }}</span></td>
+                        <td><span style="font-family:monospace;font-size:12px;font-weight:600;color:#1591DC;">{{ date('d/m/Y', strtotime($p->tgl_input)) }}</span></td>
                         <td>
                             <div style="display:flex;align-items:center;gap:8px;">
-                                <div style="width:28px;height:28px;border-radius:8px;background:#dceee2;display:flex;align-items:center;justify-content:center;color:#3f7a58;font-size:12px;font-weight:700;flex-shrink:0;">{{ $o['av'] }}</div>
-                                <span style="font-weight:500;color:#374151;font-size:13px;">{{ $o['name'] }}</span>
+                                <div style="width:28px;height:28px;border-radius:8px;background:#dceee2;display:flex;align-items:center;justify-content:center;color:#3f7a58;font-size:12px;font-weight:700;flex-shrink:0;">
+                                    {{ substr($p->kecamatan ? $p->kecamatan->nama_kecamatan : 'X', 0, 1) }}
+                                </div>
+                                <span style="font-weight:500;color:#374151;font-size:13px;">{{ $p->kecamatan ? $p->kecamatan->nama_kecamatan : '-' }}</span>
                             </div>
                         </td>
-                        <td style="color:#6b7280;font-size:13px;">{{ $o['prod'] }}</td>
-                        <td style="font-weight:600;color:#1f2937;font-size:13px;white-space:nowrap;">{{ $o['total'] }}</td>
-                        <td><span class="badge {{ $o['b'] }}">{{ $o['st'] }}</span></td>
+                        <td style="color:#6b7280;font-size:13px;">{{ $p->kategori_pekerjaan ?: '-' }}</td>
+                        <td style="font-weight:600;color:#1f2937;font-size:12px;">{{ Str::limit($p->alamat, 25) }}</td>
+                        <td>
+                            <span class="badge {{ $p->progress == 100 ? 'badge-success' : 'badge-warning' }}">
+                                {{ $p->progress ?: 0 }}%
+                            </span>
+                        </td>
                         <td style="text-align:right;">
                             <div style="display:flex;justify-content:flex-end;gap:4px;">
-                                <button style="width:28px;height:28px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#9ca3af;transition:background 0.15s;"
-                                        onmouseover="this.style.background='#e8f4fd';this.style.color='#1591DC'"
-                                        onmouseout="this.style.background='transparent';this.style.color='#9ca3af'">
+                                <a href="{{ route('admin.pekerjaan-sda.show', $p->id) }}" style="width:28px;height:28px;border-radius:8px;background:transparent;display:flex;align-items:center;justify-content:center;color:#9ca3af;transition:background 0.15s;" onmouseover="this.style.background='#e8f4fd';this.style.color='#1591DC'" onmouseout="this.style.background='transparent';this.style.color='#9ca3af'">
                                     <svg xmlns="http://www.w3.org/2000/svg" style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                </button>
-                                <button style="width:28px;height:28px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#9ca3af;transition:background 0.15s;"
-                                        onmouseover="this.style.background='#dceee2';this.style.color='#3f7a58'"
-                                        onmouseout="this.style.background='transparent';this.style.color='#9ca3af'">
+                                </a>
+                                <a href="{{ route('admin.pekerjaan-sda.edit', $p->id) }}" style="width:28px;height:28px;border-radius:8px;background:transparent;display:flex;align-items:center;justify-content:center;color:#9ca3af;transition:background 0.15s;" onmouseover="this.style.background='#dceee2';this.style.color='#3f7a58'" onmouseout="this.style.background='transparent';this.style.color='#9ca3af'">
                                     <svg xmlns="http://www.w3.org/2000/svg" style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                </button>
+                                </a>
                             </div>
                         </td>
                     </tr>
                     @endforeach
+                    @if($pekerjaanTerbaru->count() == 0)
+                    <tr>
+                        <td colspan="6" style="text-align:center;color:#9ca3af;padding:20px;">Belum ada data Pekerjaan SDA</td>
+                    </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
     </div>
 
-    {{-- Activity Feed --}}
+    {{-- Usulan Masyarakat Feed --}}
     <div class="content-card">
         <div class="content-card-header">
-            <p class="content-card-title">Aktivitas Terbaru</p>
-            <button style="width:28px;height:28px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#9ca3af;"
-                    onmouseover="this.style.background='#F1F7D4'" onmouseout="this.style.background='transparent'">
+            <p class="content-card-title">Usulan Masuk Terbaru</p>
+            <a href="{{ route('admin.usulan-masyarakat.index') }}" style="width:28px;height:28px;border-radius:8px;background:transparent;display:flex;align-items:center;justify-content:center;color:#9ca3af;" onmouseover="this.style.background='#F1F7D4'" onmouseout="this.style.background='transparent'">
                 <svg xmlns="http://www.w3.org/2000/svg" style="width:15px;height:15px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            </button>
+            </a>
         </div>
         <div style="padding:16px 20px;">
-            @php
-            $acts = [
-                ['bg'=>'#e8f4fd','ic'=>'#1591DC','desc'=>'Pengguna baru <strong>Rina Marliana</strong> mendaftar',    'time'=>'5 menit lalu'],
-                ['bg'=>'#dceee2','ic'=>'#3f7a58','desc'=>'Pesanan <strong>#ORD-4521</strong> telah diselesaikan',      'time'=>'18 menit lalu'],
-                ['bg'=>'#fef9c3','ic'=>'#a16207','desc'=>'Stok <strong>Headphone Sony</strong> tinggal 3 unit',        'time'=>'45 menit lalu'],
-                ['bg'=>'#ede9fe','ic'=>'#7c3aed','desc'=>'Produk <strong>Laptop Acer</strong> diperbarui',             'time'=>'2 jam lalu'],
-                ['bg'=>'#dcfce7','ic'=>'#16a34a','desc'=>'Laporan Juni berhasil diunduh',                              'time'=>'3 jam lalu'],
-                ['bg'=>'#fef2f2','ic'=>'#dc2626','desc'=>'Pesanan <strong>#ORD-4500</strong> dibatalkan',              'time'=>'5 jam lalu'],
-            ];
-            @endphp
-            @foreach($acts as $i => $a)
+            @foreach($usulanTerbaru as $ut)
             <div style="display:flex;align-items:flex-start;gap:10px;{{ !$loop->last ? 'padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid #f9fafb;' : '' }}">
-                <div style="width:30px;height:30px;border-radius:8px;background:{{ $a['bg'] }};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <svg xmlns="http://www.w3.org/2000/svg" style="width:14px;height:14px;color:{{ $a['ic'] }};" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                <div style="width:30px;height:30px;border-radius:8px;background:{{ $ut->status == 'Menunggu' ? '#fef9c3' : '#dceee2' }};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width:14px;height:14px;color:{{ $ut->status == 'Menunggu' ? '#a16207' : '#3f7a58' }};" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                     </svg>
                 </div>
                 <div style="flex:1;min-width:0;">
-                    <p style="font-size:12.5px;color:#4b5563;margin:0;line-height:1.5;">{!! $a['desc'] !!}</p>
+                    <p style="font-size:12.5px;color:#4b5563;margin:0;line-height:1.5;">Usulan dari <strong>{{ $ut->nama_pengusul }}</strong> ({{ Str::limit($ut->deskripsi_usulan, 30) }})</p>
                     <p style="font-size:11px;color:#9ca3af;margin:3px 0 0;display:flex;align-items:center;gap:4px;">
                         <svg xmlns="http://www.w3.org/2000/svg" style="width:11px;height:11px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        {{ $a['time'] }}
+                        {{ $ut->created_at->diffForHumans() }}
                     </p>
                 </div>
             </div>
             @endforeach
+            @if($usulanTerbaru->count() == 0)
+                <p style="font-size:12px;color:#9ca3af;text-align:center;">Belum ada usulan masyarakat.</p>
+            @endif
         </div>
     </div>
 
@@ -352,26 +231,49 @@
     </div>
     <div style="padding:16px 20px;">
         <div class="grid-4actions">
-            @php
-            $qacts = [
-                ['bg'=>'#e8f4fd','hbg'=>'#1591DC','ic'=>'#1591DC','label'=>'Tambah Produk',   'path'=>'M12 4v16m8-8H4'],
-                ['bg'=>'#dceee2','hbg'=>'#1F6F5F','ic'=>'#3f7a58','label'=>'Tambah User',     'path'=>'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z'],
-                ['bg'=>'#fef9c3','hbg'=>'#f59e0b','ic'=>'#a16207','label'=>'Buat Laporan',    'path'=>'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'],
-                ['bg'=>'#dcfce7','hbg'=>'#22c55e','ic'=>'#16a34a','label'=>'Catat Transaksi', 'path'=>'M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-            ];
-            @endphp
-            @foreach($qacts as $q)
-            <button style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 12px;
-                           border-radius:12px;border:none;background:{{ $q['bg'] }};cursor:pointer;
-                           transition:all 0.2s;font-family:inherit;"
-                    onmouseover="this.style.background='{{ $q['hbg'] }}';this.style.color='white';this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(0,0,0,0.12)';this.querySelector('.qa-icon').style.color='white';this.querySelector('.qa-label').style.color='white';"
-                    onmouseout="this.style.background='{{ $q['bg'] }}';this.style.transform='';this.style.boxShadow='';this.querySelector('.qa-icon').style.color='{{ $q['ic'] }}';this.querySelector('.qa-label').style.color='#374151';">
-                <svg xmlns="http://www.w3.org/2000/svg" class="qa-icon" style="width:22px;height:22px;color:{{ $q['ic'] }};transition:color 0.2s;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="{{ $q['path'] }}"/>
+            <a href="{{ route('admin.pekerjaan-sda.create') }}" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 12px;
+                           border-radius:12px;border:none;background:#e8f4fd;cursor:pointer;
+                           transition:all 0.2s;font-family:inherit;text-decoration:none;"
+                    onmouseover="this.style.background='#1591DC';this.style.color='white';this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(0,0,0,0.12)';this.querySelector('.qa-icon').style.color='white';this.querySelector('.qa-label').style.color='white';"
+                    onmouseout="this.style.background='#e8f4fd';this.style.transform='';this.style.boxShadow='';this.querySelector('.qa-icon').style.color='#1591DC';this.querySelector('.qa-label').style.color='#374151';">
+                <svg xmlns="http://www.w3.org/2000/svg" class="qa-icon" style="width:22px;height:22px;color:#1591DC;transition:color 0.2s;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                 </svg>
-                <span class="qa-label" style="font-size:12.5px;font-weight:600;color:#374151;text-align:center;line-height:1.3;transition:color 0.2s;">{{ $q['label'] }}</span>
-            </button>
-            @endforeach
+                <span class="qa-label" style="font-size:12.5px;font-weight:600;color:#374151;text-align:center;line-height:1.3;transition:color 0.2s;">Tambah Pekerjaan SDA</span>
+            </a>
+            
+            <a href="{{ route('admin.usulan-masyarakat.create') }}" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 12px;
+                           border-radius:12px;border:none;background:#dceee2;cursor:pointer;
+                           transition:all 0.2s;font-family:inherit;text-decoration:none;"
+                    onmouseover="this.style.background='#1F6F5F';this.style.color='white';this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(0,0,0,0.12)';this.querySelector('.qa-icon').style.color='white';this.querySelector('.qa-label').style.color='white';"
+                    onmouseout="this.style.background='#dceee2';this.style.transform='';this.style.boxShadow='';this.querySelector('.qa-icon').style.color='#3f7a58';this.querySelector('.qa-label').style.color='#374151';">
+                <svg xmlns="http://www.w3.org/2000/svg" class="qa-icon" style="width:22px;height:22px;color:#3f7a58;transition:color 0.2s;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span class="qa-label" style="font-size:12.5px;font-weight:600;color:#374151;text-align:center;line-height:1.3;transition:color 0.2s;">Tambah Usulan</span>
+            </a>
+
+            <a href="{{ route('admin.surat-permohonan.index') }}" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 12px;
+                           border-radius:12px;border:none;background:#fef9c3;cursor:pointer;
+                           transition:all 0.2s;font-family:inherit;text-decoration:none;"
+                    onmouseover="this.style.background='#f59e0b';this.style.color='white';this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(0,0,0,0.12)';this.querySelector('.qa-icon').style.color='white';this.querySelector('.qa-label').style.color='white';"
+                    onmouseout="this.style.background='#fef9c3';this.style.transform='';this.style.boxShadow='';this.querySelector('.qa-icon').style.color='#a16207';this.querySelector('.qa-label').style.color='#374151';">
+                <svg xmlns="http://www.w3.org/2000/svg" class="qa-icon" style="width:22px;height:22px;color:#a16207;transition:color 0.2s;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <span class="qa-label" style="font-size:12.5px;font-weight:600;color:#374151;text-align:center;line-height:1.3;transition:color 0.2s;">Daftar Surat</span>
+            </a>
+
+            <a href="{{ route('admin.pekerjaan-sda.map') }}" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 12px;
+                           border-radius:12px;border:none;background:#dcfce7;cursor:pointer;
+                           transition:all 0.2s;font-family:inherit;text-decoration:none;"
+                    onmouseover="this.style.background='#22c55e';this.style.color='white';this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(0,0,0,0.12)';this.querySelector('.qa-icon').style.color='white';this.querySelector('.qa-label').style.color='white';"
+                    onmouseout="this.style.background='#dcfce7';this.style.transform='';this.style.boxShadow='';this.querySelector('.qa-icon').style.color='#16a34a';this.querySelector('.qa-label').style.color='#374151';">
+                <svg xmlns="http://www.w3.org/2000/svg" class="qa-icon" style="width:22px;height:22px;color:#16a34a;transition:color 0.2s;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                </svg>
+                <span class="qa-label" style="font-size:12.5px;font-weight:600;color:#374151;text-align:center;line-height:1.3;transition:color 0.2s;">Lihat Peta</span>
+            </a>
         </div>
     </div>
 </div>
