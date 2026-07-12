@@ -130,8 +130,7 @@
             justify-content: space-between;
         }
         .ttd-space {
-            min-height: 60px;
-            flex-grow: 1;
+            height: 3cm;
         }
 
         @media print {
@@ -143,6 +142,7 @@
                 box-shadow: none;
                 width: 100%;
                 padding: 0; /* Margin handled by browser print settings */
+                min-height: auto;
             }
             @page {
                 size: A4;
