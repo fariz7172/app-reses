@@ -8,6 +8,8 @@ use App\Models\PekerjaanSda;
 use App\Models\SurveiReses;
 use App\Models\SuratPermohonan;
 use App\Models\Dewan;
+use App\Models\Pelaksana;
+use App\Models\Vendor;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 
@@ -34,8 +36,10 @@ class PekerjaanSdaController extends Controller
         $dewans = Dewan::all();
         $kecamatans = Kecamatan::all();
         $kelurahans = Kelurahan::all();
+        $pelaksanas = Pelaksana::all();
+        $vendors = Vendor::all();
 
-        return view('admin.pekerjaan-sda.create', compact('survei_reses_list', 'survei_terpilih', 'dewans', 'kecamatans', 'kelurahans'));
+        return view('admin.pekerjaan-sda.create', compact('survei_reses_list', 'survei_terpilih', 'dewans', 'kecamatans', 'kelurahans', 'pelaksanas', 'vendors'));
     }
 
     public function store(Request $request)
@@ -66,7 +70,9 @@ class PekerjaanSdaController extends Controller
             'status_tindak_lanjut' => 'nullable|string',
             'latitude' => 'nullable|string',
             'longitude' => 'nullable|string',
-            'photo.*' => 'nullable|image|max:2048'
+            'photo.*' => 'nullable|image|max:2048',
+            'id_pelaksana' => 'nullable|exists:pelaksanas,id',
+            'id_vendor' => 'nullable|exists:vendors,id'
         ]);
 
         $fotoPaths = [];
@@ -104,8 +110,54 @@ class PekerjaanSdaController extends Controller
 
     public function show(string $id)
     {
-        $pekerjaan = PekerjaanSda::with(['dewan', 'kecamatan', 'kelurahan', 'surveiReses', 'suratPermohonan'])->findOrFail($id);
+        $pekerjaan = PekerjaanSda::with(['dewan', 'kecamatan', 'kelurahan', 'surveiReses', 'suratPermohonan', 'pelaksana', 'vendor'])->findOrFail($id);
         return view('admin.pekerjaan-sda.show', compact('pekerjaan'));
+    }
+
+    public function cetakBast(string $id)
+    {
+        $pekerjaan = PekerjaanSda::with(['dewan', 'kecamatan', 'kelurahan', 'pelaksana', 'vendor'])->findOrFail($id);
+        
+        if ($pekerjaan->progress != 100) {
+            return redirect()->back()->withErrors('Pekerjaan belum mencapai 100% sehingga tidak dapat dicetak.');
+        }
+
+        if (!$pekerjaan->pelaksana || !$pekerjaan->vendor) {
+            return redirect()->back()->withErrors('Data Pelaksana atau Vendor belum lengkap. Silakan lengkapi terlebih dahulu melalui form edit.');
+        }
+
+        // Generate nomor surat if not exist. Example: BAST-SKPD-ID/2026
+        $nomorSurat = $pekerjaan->no_skpd ? 'BAST-' . $pekerjaan->no_skpd : 'BAST/SDA/' . str_pad($pekerjaan->id, 4, '0', STR_PAD_LEFT) . '/' . date('Y');
+        
+        // Tanggal terbilang manual
+        $hari = ['Sunday' => 'Minggu', 'Monday' => 'Senin', 'Tuesday' => 'Selasa', 'Wednesday' => 'Rabu', 'Thursday' => 'Kamis', 'Friday' => 'Jumat', 'Saturday' => 'Sabtu'];
+        $bulan = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        
+        $tanggalSekarang = date('Y-m-d');
+        $namaHari = $hari[date('l', strtotime($tanggalSekarang))];
+        $tglStr = date('j', strtotime($tanggalSekarang));
+        $blnStr = $bulan[(int)date('m', strtotime($tanggalSekarang))];
+        $thnStr = date('Y', strtotime($tanggalSekarang));
+
+        // Konversi angka ke teks (Sederhana untuk tanggal < 32 dan Tahun 2000an)
+        $terbilangTgl = $this->terbilangAngka($tglStr);
+        $terbilangThn = $this->terbilangAngka($thnStr);
+
+        return view('admin.pekerjaan-sda.cetak-bast', compact('pekerjaan', 'nomorSurat', 'tanggalSekarang', 'namaHari', 'tglStr', 'blnStr', 'thnStr', 'terbilangTgl', 'terbilangThn'));
+    }
+
+    private function terbilangAngka($angka)
+    {
+        $angka = (int)$angka;
+        $huruf = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
+        if ($angka < 12) return $huruf[$angka];
+        if ($angka < 20) return $huruf[$angka - 10] . " Belas";
+        if ($angka < 100) return $huruf[floor($angka / 10)] . " Puluh " . $huruf[$angka % 10];
+        if ($angka < 200) return "Seratus " . $this->terbilangAngka($angka - 100);
+        if ($angka < 1000) return $huruf[floor($angka / 100)] . " Ratus " . $this->terbilangAngka($angka % 100);
+        if ($angka < 2000) return "Seribu " . $this->terbilangAngka($angka - 1000);
+        if ($angka < 1000000) return $this->terbilangAngka(floor($angka / 1000)) . " Ribu " . $this->terbilangAngka($angka % 1000);
+        return (string)$angka;
     }
 
     public function edit(string $id)
@@ -114,8 +166,10 @@ class PekerjaanSdaController extends Controller
         $dewans = Dewan::all();
         $kecamatans = Kecamatan::all();
         $kelurahans = Kelurahan::all();
+        $pelaksanas = Pelaksana::all();
+        $vendors = Vendor::all();
 
-        return view('admin.pekerjaan-sda.edit', compact('pekerjaan', 'dewans', 'kecamatans', 'kelurahans'));
+        return view('admin.pekerjaan-sda.edit', compact('pekerjaan', 'dewans', 'kecamatans', 'kelurahans', 'pelaksanas', 'vendors'));
     }
 
     public function update(Request $request, string $id)
@@ -147,7 +201,9 @@ class PekerjaanSdaController extends Controller
             'status_tindak_lanjut' => 'nullable|string',
             'latitude' => 'nullable|string',
             'longitude' => 'nullable|string',
-            'photo.*' => 'nullable|image|max:2048'
+            'photo.*' => 'nullable|image|max:2048',
+            'id_pelaksana' => 'nullable|exists:pelaksanas,id',
+            'id_vendor' => 'nullable|exists:vendors,id'
         ]);
 
         $fotoPaths = $pekerjaan->photo ? json_decode($pekerjaan->photo, true) : [];
@@ -173,6 +229,25 @@ class PekerjaanSdaController extends Controller
         $validated['photo'] = count($fotoPaths) > 0 ? json_encode($fotoPaths) : null;
 
         $pekerjaan->update($validated);
+
+        // Sinkronisasi dengan Surat Permohonan jika ada
+        if ($pekerjaan->suratPermohonan) {
+            $pengirim = $pekerjaan->sumber_data;
+            if ($pekerjaan->sumber_data == 'Reses' && $pekerjaan->dewan) {
+                $pengirim = 'Dewan: ' . $pekerjaan->dewan->nama;
+            } elseif ($pekerjaan->rincian_sumber_data) {
+                $pengirim .= ' (' . $pekerjaan->rincian_sumber_data . ')';
+            }
+
+            $pekerjaan->suratPermohonan->update([
+                'nomor_surat' => $pekerjaan->no_skpd,
+                'dari' => $pengirim,
+                'id_kecamatan' => $pekerjaan->id_kecamatan,
+                'id_kelurahan' => $pekerjaan->id_kelurahan,
+                'lokasi' => $pekerjaan->alamat,
+                'deskripsi' => $pekerjaan->deskripsi,
+            ]);
+        }
 
         // Sinkronisasi status selesai ke reses jika progress 100
         if ($pekerjaan->id_survei_reses && $pekerjaan->progress == 100) {

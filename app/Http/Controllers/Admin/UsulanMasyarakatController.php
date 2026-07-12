@@ -51,8 +51,7 @@ class UsulanMasyarakatController extends Controller
         $fotoPaths = [];
         if ($request->hasFile('photo')) {
             foreach ($request->file('photo') as $file) {
-                $filename = Str::random(10) . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $path = $file->storeAs('public/photos', $filename);
+                $path = $file->store('usulan_photos', 'public');
                 $fotoPaths[] = $path;
             }
         }
@@ -113,8 +112,7 @@ class UsulanMasyarakatController extends Controller
 
         if ($request->hasFile('photo')) {
             foreach ($request->file('photo') as $file) {
-                $filename = Str::random(10) . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $path = $file->storeAs('public/photos', $filename);
+                $path = $file->store('usulan_photos', 'public');
                 $fotoPaths[] = $path;
             }
         }
@@ -143,7 +141,6 @@ class UsulanMasyarakatController extends Controller
             'deskripsi' => $usulan->deskripsi_usulan,
             'latitude' => $usulan->latitude,
             'longitude' => $usulan->longitude,
-            'photo' => $usulan->photo, // Salin JSON foto
             'tgl_input' => date('Y-m-d'),
             'tahun_monev' => date('Y'),
         ]);
@@ -156,10 +153,12 @@ class UsulanMasyarakatController extends Controller
             'id_pekerjaan_sda' => $pekerjaan->id,
             'tanggal' => date('Y-m-d'),
             'status' => 'Menunggu',
+            'dari' => 'Usulan Masyarakat (' . $usulan->nama_pengusul . ')',
             'id_kecamatan' => $pekerjaan->id_kecamatan,
             'id_kelurahan' => $pekerjaan->id_kelurahan,
             'lokasi' => $pekerjaan->alamat,
             'deskripsi' => $pekerjaan->deskripsi,
+            'photo' => $usulan->photo, // Salin foto ke Surat Permohonan sebagai BEFORE
         ]);
 
         return redirect()->route('admin.pekerjaan-sda.edit', $pekerjaan->id)

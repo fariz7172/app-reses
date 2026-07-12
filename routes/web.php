@@ -8,6 +8,9 @@ use App\Http\Controllers\Admin\SuratPermohonanController;
 use App\Http\Controllers\Admin\SurveiResesController;
 use App\Http\Controllers\Admin\MasterDataController;
 use App\Http\Controllers\Admin\UsulanMasyarakatController;
+use App\Http\Controllers\Admin\FraksiController;
+use App\Http\Controllers\Admin\PelaksanaController;
+use App\Http\Controllers\Admin\VendorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,10 +35,14 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     Route::resource('survei-reses', SurveiResesController::class);
     Route::get('pekerjaan-sda/map', [PekerjaanSdaController::class, 'mapView'])->name('pekerjaan-sda.map');
+    Route::get('pekerjaan-sda/{id}/cetak-bast', [PekerjaanSdaController::class, 'cetakBast'])->name('pekerjaan-sda.cetak-bast');
     Route::resource('pekerjaan-sda', PekerjaanSdaController::class);
     Route::resource('surat-permohonan', SuratPermohonanController::class);
     Route::post('usulan-masyarakat/{id}/terima', [UsulanMasyarakatController::class, 'terimaUsulan'])->name('usulan-masyarakat.terima');
     Route::resource('usulan-masyarakat', UsulanMasyarakatController::class);
+    Route::resource('fraksi', FraksiController::class);
+    Route::resource('pelaksana', PelaksanaController::class);
+    Route::resource('vendor', VendorController::class);
     
     // Master Data Routes
     Route::prefix('master')->name('master.')->group(function () {

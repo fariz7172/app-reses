@@ -62,9 +62,39 @@ class SurveiResesController extends Controller
         // Simpan keluhan yang sementara kita ambil dari permintaan
         $validated['keluhan'] = $validated['permintaan'];
 
-        \App\Models\SurveiReses::create($validated);
+        $survei = \App\Models\SurveiReses::create($validated);
 
-        return redirect()->route('admin.survei-reses.index')->with('success', 'Data Survei Reses berhasil disimpan!');
+        // Auto-Generate Pekerjaan SDA
+        $pekerjaan = \App\Models\PekerjaanSda::create([
+            'id_survei_reses' => $survei->id,
+            'id_dewan' => $survei->id_dewan,
+            'sumber_data' => 'Hasil Reses',
+            'id_kecamatan' => $survei->id_kecamatan,
+            'id_kelurahan' => $survei->id_kelurahan,
+            'alamat' => $survei->alamat,
+            'deskripsi' => $survei->keluhan . ' / ' . $survei->permintaan,
+            'tgl_input' => date('Y-m-d'),
+            'tahun_monev' => date('Y'),
+        ]);
+
+        // Auto-Generate Surat Permohonan
+        $pengirim = 'Dewan';
+        if ($survei->dewan) {
+            $pengirim = 'Dewan: ' . $survei->dewan->nama;
+        }
+
+        \App\Models\SuratPermohonan::create([
+            'id_pekerjaan_sda' => $pekerjaan->id,
+            'tanggal' => date('Y-m-d'),
+            'status' => 'Menunggu',
+            'dari' => $pengirim,
+            'id_kecamatan' => $pekerjaan->id_kecamatan,
+            'id_kelurahan' => $pekerjaan->id_kelurahan,
+            'lokasi' => $pekerjaan->alamat,
+            'deskripsi' => $pekerjaan->deskripsi,
+        ]);
+
+        return redirect()->route('admin.pekerjaan-sda.index')->with('success', 'Data Survei Reses berhasil disimpan dan otomatis masuk ke Pekerjaan SDA!');
     }
 
     /**

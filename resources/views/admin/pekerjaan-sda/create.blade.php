@@ -12,25 +12,16 @@
     </div>
 
     <div style="padding: 24px;">
-        <!-- TAHAP 1: TARIK DATA (OPSIONAL) -->
-        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-            <h3 style="font-size: 15px; font-weight: 700; color: #166534; margin-bottom: 12px;">Integrasi Data Cepat</h3>
-            <p style="font-size: 13px; color: #15803d; margin-bottom: 16px;">Jika pekerjaan ini bersumber dari usulan Reses Dewan, Anda bisa menarik datanya secara otomatis untuk menghemat waktu pengetikan.</p>
-            
-            <form action="{{ route('admin.pekerjaan-sda.create') }}" method="GET" style="display: flex; gap: 12px; align-items: flex-end;">
-                <div style="flex-grow: 1; max-width: 500px;">
-                    <label style="display: block; font-size: 13px; font-weight: 600; color: #166534; margin-bottom: 6px;">Pilih Data Survei Reses (Status: Baru/Disurvei)</label>
-                    <select name="survei_id" style="width: 100%; padding: 10px; border: 1px solid #86efac; border-radius: 8px; font-family: inherit; font-size: 14px;">
-                        <option value="">-- Pilih Laporan Reses --</option>
-                        @foreach($survei_reses_list as $reses)
-                            <option value="{{ $reses->id }}" {{ request('survei_id') == $reses->id ? 'selected' : '' }}>
-                                Reses #{{ $reses->id }} | Dewan: {{ $reses->dewan ? $reses->dewan->nama : '-' }} | Lokasi: {{ Str::limit($reses->alamat, 30) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <button type="submit" style="background: #166534; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;">Tarik Data</button>
-            </form>
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+            <p style="margin: 0 0 10px 0; font-size: 14px; color: #166534;">
+                <strong style="display: flex; align-items: center; gap: 6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Informasi Form
+                </strong>
+            </p>
+            <p style="margin: 0; font-size: 13px; color: #15803d;">
+                Data Pekerjaan SDA yang diinput secara manual melalui form ini. Jika data bersumber dari **Usulan Masyarakat** atau **Survei Reses**, maka data sudah otomatis masuk tanpa perlu mengisi form ini lagi.
+            </p>
         </div>
 
         @if ($errors->any())
@@ -172,6 +163,24 @@
                 <div>
                     <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Tahun Dikerjakan</label>
                     <input type="number" name="tahun_dikerjakan" value="{{ old('tahun_dikerjakan', date('Y')) }}" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Pelaksana</label>
+                    <select name="id_pelaksana" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                        <option value="">-- Pilih Pelaksana --</option>
+                        @foreach($pelaksanas as $p)
+                            <option value="{{ $p->id }}" {{ old('id_pelaksana') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Vendor (Perusahaan)</label>
+                    <select name="id_vendor" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                        <option value="">-- Pilih Vendor --</option>
+                        @foreach($vendors as $v)
+                            <option value="{{ $v->id }}" {{ old('id_vendor') == $v->id ? 'selected' : '' }}>{{ $v->nama }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             

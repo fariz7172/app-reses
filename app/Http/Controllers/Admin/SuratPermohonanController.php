@@ -60,7 +60,15 @@ class SuratPermohonanController extends Controller
         }
         $validated['photo'] = count($fotoPaths) > 0 ? json_encode($fotoPaths) : null;
 
-        SuratPermohonan::create($validated);
+        $surat = SuratPermohonan::create($validated);
+
+        // Sync nomor_surat ke no_skpd di Pekerjaan SDA
+        if ($surat->id_pekerjaan_sda && $surat->nomor_surat) {
+            $pekerjaan = \App\Models\PekerjaanSda::find($surat->id_pekerjaan_sda);
+            if ($pekerjaan) {
+                $pekerjaan->update(['no_skpd' => $surat->nomor_surat]);
+            }
+        }
 
         return redirect()->route('admin.surat-permohonan.index')->with('success', 'Surat Permohonan berhasil dibuat!');
     }
@@ -109,6 +117,14 @@ class SuratPermohonanController extends Controller
         $validated['photo'] = count($fotoPaths) > 0 ? json_encode($fotoPaths) : null;
 
         $surat->update($validated);
+
+        // Sync nomor_surat ke no_skpd di Pekerjaan SDA
+        if ($surat->id_pekerjaan_sda && $surat->nomor_surat) {
+            $pekerjaan = \App\Models\PekerjaanSda::find($surat->id_pekerjaan_sda);
+            if ($pekerjaan) {
+                $pekerjaan->update(['no_skpd' => $surat->nomor_surat]);
+            }
+        }
 
         return redirect()->route('admin.surat-permohonan.index')->with('success', 'Surat Permohonan berhasil diperbarui!');
     }

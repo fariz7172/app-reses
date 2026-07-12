@@ -41,7 +41,9 @@ class PekerjaanSda extends Model
         'progress',
         'photo',
         'latitude',
-        'longitude'
+        'longitude',
+        'id_pelaksana',
+        'id_vendor'
     ];
 
     public function surveiReses()
@@ -62,6 +64,16 @@ class PekerjaanSda extends Model
     public function kelurahan()
     {
         return $this->belongsTo(Kelurahan::class, 'id_kelurahan');
+    }
+
+    public function pelaksana()
+    {
+        return $this->belongsTo(Pelaksana::class, 'id_pelaksana');
+    }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class, 'id_vendor');
     }
 
     public function suratPermohonan()

@@ -3,7 +3,7 @@
 @section('content')
 <div class="content-card">
     <div class="content-card-header">
-        <h2 class="content-card-title">Edit Surat Permohonan / Laporan</h2>
+        <h2 class="content-card-title">Edit Surat Permohonan / Laporan /Hasil Survei</h2>
         <a href="{{ route('admin.surat-permohonan.index') }}" class="btn btn-ghost">Batal</a>
     </div>
 

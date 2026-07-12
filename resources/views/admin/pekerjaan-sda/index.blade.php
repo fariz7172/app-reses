@@ -13,6 +13,16 @@
     </div>
     
     <div style="padding: 20px; overflow-x: auto;">
+        @if ($errors->any())
+            <div style="background: #fef2f2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                <ul style="margin: 0; padding-left: 20px;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         @if(session('success'))
             <div style="background: #ecfdf5; color: #059669; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
                 {{ session('success') }}
@@ -37,8 +47,11 @@
                     <td style="padding: 12px; color: #374151;">{{ $index + 1 }}</td>
                     <td style="padding: 12px; color: #111827;">
                         <span style="font-weight: 600;">{{ $item->sumber_data }}</span><br>
+                        @if($item->no_skpd)
+                            <small style="color: #4b5563; font-weight: 600;">Ref: {{ $item->no_skpd }}</small><br>
+                        @endif
                         @if($item->id_survei_reses)
-                            <small style="color: #059669; background: #d1fae5; padding: 2px 6px; border-radius: 4px;">Terkait Reses #{{ $item->id_survei_reses }}</small>
+                            <small style="color: #059669; background: #d1fae5; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px;">Terkait Reses #{{ $item->id_survei_reses }}</small>
                         @endif
                     </td>
                     <td style="padding: 12px; color: #374151;">
@@ -69,6 +82,9 @@
                     <td style="padding: 12px; display: flex; gap: 8px;">
                         <a href="{{ route('admin.pekerjaan-sda.show', $item->id) }}" style="color: #1d4ed8; text-decoration: none; font-weight: 500;">Detail</a>
                         <a href="{{ route('admin.pekerjaan-sda.edit', $item->id) }}" style="color: #059669; text-decoration: none; font-weight: 500;">Edit</a>
+                        @if($item->progress == 100)
+                            <a href="{{ route('admin.pekerjaan-sda.cetak-bast', $item->id) }}" target="_blank" style="color: #ea580c; text-decoration: none; font-weight: 500;">Cetak BAST</a>
+                        @endif
                         <form action="{{ route('admin.pekerjaan-sda.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?');" style="display:inline;">
                             @csrf
                             @method('DELETE')

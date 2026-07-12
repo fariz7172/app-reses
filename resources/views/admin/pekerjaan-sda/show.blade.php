@@ -109,30 +109,39 @@
                         <td style="padding: 8px 0; font-weight: 600;">Tahun Dikerjakan</td>
                         <td style="padding: 8px 0;">: {{ $pekerjaan->tahun_dikerjakan ?? '-' }}</td>
                     </tr>
+                    <tr>
+                        <td style="padding: 8px 0; font-weight: 600;">Pelaksana</td>
+                        <td style="padding: 8px 0;">: {{ $pekerjaan->pelaksana ? $pekerjaan->pelaksana->nama : '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; font-weight: 600;">Vendor (Perusahaan)</td>
+                        <td style="padding: 8px 0;">: {{ $pekerjaan->vendor ? $pekerjaan->vendor->nama : '-' }}</td>
+                    </tr>
                 </table>
             </div>
         </div>
 
         <div>
             <h3 style="font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb;">Galeri Foto Progress</h3>
+            <p style="font-size: 11px; color: #64748b; margin-top: -10px; margin-bottom: 16px;">Dari data Survei Reses & Usulan Masyarakat</p>
             
-            @if($pekerjaan->photo)
-                @php
-                    $fotos = json_decode($pekerjaan->photo, true);
-                @endphp
-                @if(is_array($fotos) && count($fotos) > 0)
-                    <div style="display: flex; flex-wrap: wrap; gap: 16px;">
-                        @foreach($fotos as $fotoPath)
-                            <div style="width: 200px; height: 150px; border-radius: 8px; overflow: hidden; border: 1px solid #e5e7eb;">
-                                <img src="{{ asset('storage/'.$fotoPath) }}" alt="Foto Pekerjaan" style="width: 100%; height: 100%; object-fit: cover;">
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <div style="padding: 24px; background: #f9fafb; text-align: center; border-radius: 8px; color: #6b7280; border: 1px dashed #d1d5db;">
-                        Belum ada foto yang diunggah.
-                    </div>
-                @endif
+            @php
+                $fotosProgress = null;
+                if ($pekerjaan->surveiReses && $pekerjaan->surveiReses->foto) {
+                    $fotosProgress = json_decode($pekerjaan->surveiReses->foto, true);
+                } elseif ($pekerjaan->sumber_data == 'Masyarakat' && $pekerjaan->suratPermohonan && $pekerjaan->suratPermohonan->photo) {
+                    $fotosProgress = json_decode($pekerjaan->suratPermohonan->photo, true);
+                }
+            @endphp
+
+            @if(is_array($fotosProgress) && count($fotosProgress) > 0)
+                <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+                    @foreach($fotosProgress as $fotoPath)
+                        <div style="width: 200px; height: 150px; border-radius: 8px; overflow: hidden; border: 1px solid #e5e7eb;">
+                            <img src="{{ asset('storage/'.str_replace('public/', '', $fotoPath)) }}" alt="Foto Progress" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    @endforeach
+                </div>
             @else
                 <div style="padding: 24px; background: #f9fafb; text-align: center; border-radius: 8px; color: #6b7280; border: 1px dashed #d1d5db;">
                     Belum ada foto yang diunggah.
@@ -145,35 +154,14 @@
             <!-- BEFORE -->
             <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px;">
                 <h4 style="font-size: 14px; font-weight: 700; color: #dc2626; margin-bottom: 4px; text-align: center;">KONDISI BEFORE (SEBELUM)</h4>
-                <p style="font-size: 11px; color: #64748b; text-align: center; margin-bottom: 16px;">Dari data Survei Reses</p>
+                <p style="font-size: 11px; color: #64748b; text-align: center; margin-bottom: 16px;">Dari data Surat Permohonan</p>
 
-                @if($pekerjaan->surveiReses && $pekerjaan->surveiReses->foto)
-                    @php $fotosBefore = json_decode($pekerjaan->surveiReses->foto, true); @endphp
+                @if($pekerjaan->suratPermohonan && $pekerjaan->suratPermohonan->photo)
+                    @php $fotosBefore = json_decode($pekerjaan->suratPermohonan->photo, true); @endphp
                     @if(is_array($fotosBefore) && count($fotosBefore) > 0)
                         <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
                             @foreach($fotosBefore as $fb)
-                                <img src="{{ asset('storage/'.$fb) }}" alt="Before" style="width: 100%; max-width: 200px; height: 140px; object-fit: cover; border-radius: 6px; border: 1px solid #f87171;">
-                            @endforeach
-                        </div>
-                    @else
-                        <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada foto yang diunggah</div>
-                    @endif
-                @else
-                    <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada data Survei Reses yang terkait</div>
-                @endif
-            </div>
-
-            <!-- AFTER -->
-            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px;">
-                <h4 style="font-size: 14px; font-weight: 700; color: #16a34a; margin-bottom: 4px; text-align: center;">KONDISI AFTER (SESUDAH)</h4>
-                <p style="font-size: 11px; color: #64748b; text-align: center; margin-bottom: 16px;">Dari data Surat Permohonan (Laporan)</p>
-                
-                @if($pekerjaan->suratPermohonan && $pekerjaan->suratPermohonan->photo)
-                    @php $fotosAfter = json_decode($pekerjaan->suratPermohonan->photo, true); @endphp
-                    @if(is_array($fotosAfter) && count($fotosAfter) > 0)
-                        <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
-                            @foreach($fotosAfter as $fa)
-                                <img src="{{ asset('storage/'.$fa) }}" alt="After" style="width: 100%; max-width: 200px; height: 140px; object-fit: cover; border-radius: 6px; border: 1px solid #4ade80;">
+                                <img src="{{ asset('storage/'.str_replace('public/', '', $fb)) }}" alt="Before" style="width: 100%; max-width: 200px; height: 140px; object-fit: cover; border-radius: 6px; border: 1px solid #f87171;">
                             @endforeach
                         </div>
                     @else
@@ -181,6 +169,27 @@
                     @endif
                 @else
                     <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada data Surat Permohonan yang terkait</div>
+                @endif
+            </div>
+
+            <!-- AFTER -->
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px;">
+                <h4 style="font-size: 14px; font-weight: 700; color: #16a34a; margin-bottom: 4px; text-align: center;">KONDISI AFTER (SESUDAH)</h4>
+                <p style="font-size: 11px; color: #64748b; text-align: center; margin-bottom: 16px;">Dari data Pekerjaan SDA</p>
+                
+                @if($pekerjaan->photo)
+                    @php $fotosAfter = json_decode($pekerjaan->photo, true); @endphp
+                    @if(is_array($fotosAfter) && count($fotosAfter) > 0)
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+                            @foreach($fotosAfter as $fa)
+                                <img src="{{ asset('storage/'.str_replace('public/', '', $fa)) }}" alt="After" style="width: 100%; max-width: 200px; height: 140px; object-fit: cover; border-radius: 6px; border: 1px solid #4ade80;">
+                            @endforeach
+                        </div>
+                    @else
+                        <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada foto yang diunggah</div>
+                    @endif
+                @else
+                    <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada foto Pekerjaan SDA</div>
                 @endif
             </div>
         </div>
