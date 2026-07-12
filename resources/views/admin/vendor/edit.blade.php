@@ -28,7 +28,7 @@
             </div>
 
             <div style="margin-bottom: 20px; max-width: 500px;">
-                <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Jabatan / Peran</label>
+                <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Nama Direktur</label>
                 <input type="text" name="jabatan" value="{{ old('jabatan', $vendor->jabatan) }}" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
             </div>
 
