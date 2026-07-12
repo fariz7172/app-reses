@@ -7,8 +7,8 @@
     <style>
         body {
             font-family: 'Times New Roman', Times, serif;
-            font-size: 12pt;
-            line-height: 1.5;
+            font-size: 11pt;
+            line-height: 1.4;
             color: #000;
             margin: 0;
             padding: 0;
@@ -73,17 +73,17 @@
         /* Judul Surat */
         .judul-surat {
             text-align: center;
-            margin: 20px 0;
+            margin: 10px 0;
         }
         .judul-surat h4 {
             margin: 0;
-            font-size: 12pt;
+            font-size: 11pt;
             text-decoration: underline;
             font-weight: bold;
         }
         .judul-surat p {
             margin: 0;
-            font-size: 12pt;
+            font-size: 11pt;
         }
 
         /* Isi Surat */
@@ -92,7 +92,7 @@
         }
         
         .identitas {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
         .identitas-table {
@@ -105,7 +105,7 @@
         }
         
         .pernyataan {
-            margin-top: 15px;
+            margin-top: 10px;
         }
         .pernyataan ol {
             padding-left: 20px;
@@ -117,7 +117,7 @@
 
         /* Tanda Tangan */
         .tanda-tangan {
-            margin-top: 50px;
+            margin-top: 30px;
             width: 100%;
             display: flex;
             justify-content: space-between;
@@ -130,7 +130,7 @@
             justify-content: space-between;
         }
         .ttd-space {
-            min-height: 80px;
+            min-height: 60px;
             flex-grow: 1;
         }
 
@@ -154,7 +154,7 @@
 <body onload="window.print()">
     <div class="page">
         <!-- Kop Surat -->
-        <div style="text-align: center; margin-bottom: 20px;">
+        <div style="text-align: center; margin-bottom: 10px;">
             <img src="{{ asset('assets/kop.png') }}" alt="Kop Surat" style="width: 100%; height: auto;">
         </div>
 
@@ -219,7 +219,7 @@
                 </ol>
             </div>
 
-            <p style="margin-top: 20px;">Demikian Berita Acara ini di tandatangani di Jakarta, pada hari dan tanggal tersebut di muka oleh <strong>PIHAK KESATU</strong> dan <strong>PIHAK KEDUA</strong>, serta dibuat rangkap 3 (tiga) untuk dipergunakan sebagaimana mestinya.</p>
+            <p style="margin-top: 10px;">Demikian Berita Acara ini di tandatangani di Jakarta, pada hari dan tanggal tersebut di muka oleh <strong>PIHAK KESATU</strong> dan <strong>PIHAK KEDUA</strong>, serta dibuat rangkap 3 (tiga) untuk dipergunakan sebagaimana mestinya.</p>
         </div>
 
         <!-- Tanda Tangan -->
@@ -235,7 +235,7 @@
             </div>
             <div class="ttd-box">
                 <div>
-                    <p style="margin:0;">PIHAK KESATU<br>{{ $pekerjaan->pelaksana->jabatan ?? 'Kepala Seksi' }}<br>Suku Dinas Sumber Daya Air Kota<br>Administrasi Jakarta Utara<br>Selaku Pejabat Pembuat Komitmen</p>
+                    <p style="margin:0;">PIHAK KESATU<br>{{ $pekerjaan->pelaksana->jabatan ?? 'Kepala Seksi' }}<br></p>
                 </div>
                 <div class="ttd-space"></div>
                 <div>
