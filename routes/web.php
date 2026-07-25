@@ -39,6 +39,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('pekerjaan-sda', PekerjaanSdaController::class);
     Route::resource('surat-permohonan', SuratPermohonanController::class);
     Route::post('usulan-masyarakat/{id}/terima', [UsulanMasyarakatController::class, 'terimaUsulan'])->name('usulan-masyarakat.terima');
+    Route::post('usulan-masyarakat/import-earsip', [UsulanMasyarakatController::class, 'importEarsip'])->name('usulan-masyarakat.import-earsip');
     Route::resource('usulan-masyarakat', UsulanMasyarakatController::class);
     Route::resource('fraksi', FraksiController::class);
     Route::resource('pelaksana', PelaksanaController::class);

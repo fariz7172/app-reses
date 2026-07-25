@@ -10,6 +10,7 @@ use App\Models\SuratPermohonan;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class UsulanMasyarakatController extends Controller
@@ -38,6 +39,7 @@ class UsulanMasyarakatController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'nomor_surat' => 'nullable|string',
             'nama_pengusul' => 'required|string',
             'id_kecamatan' => 'nullable|exists:kecamatans,id',
             'id_kelurahan' => 'nullable|exists:kelurahans,id',
@@ -82,6 +84,7 @@ class UsulanMasyarakatController extends Controller
         $usulan = UsulanMasyarakat::findOrFail($id);
         
         $validated = $request->validate([
+            'nomor_surat' => 'nullable|string',
             'nama_pengusul' => 'required|string',
             'id_kecamatan' => 'nullable|exists:kecamatans,id',
             'id_kelurahan' => 'nullable|exists:kelurahans,id',
@@ -133,6 +136,7 @@ class UsulanMasyarakatController extends Controller
 
         // Salin data ke tabel Pekerjaan SDA
         $pekerjaan = PekerjaanSda::create([
+            'no_skpd' => $usulan->nomor_surat,
             'sumber_data' => 'Masyarakat',
             'rincian_sumber_data' => $usulan->nama_pengusul,
             'id_kecamatan' => $usulan->id_kecamatan,
@@ -151,6 +155,7 @@ class UsulanMasyarakatController extends Controller
         // Auto-Generate Surat Permohonan
         SuratPermohonan::create([
             'id_pekerjaan_sda' => $pekerjaan->id,
+            'nomor_surat' => $usulan->nomor_surat,
             'tanggal' => date('Y-m-d'),
             'status' => 'Menunggu',
             'dari' => 'Usulan Masyarakat (' . $usulan->nama_pengusul . ')',
@@ -181,5 +186,48 @@ class UsulanMasyarakatController extends Controller
         $usulan->delete();
 
         return redirect()->route('admin.usulan-masyarakat.index')->with('success', 'Data berhasil dihapus!');
+    }
+
+    public function importEarsip()
+    {
+        try {
+            $response = Http::timeout(10)->get('http://127.0.0.1:8000/api/reses');
+
+            if (!$response->successful() || $response->json('status') !== 'success') {
+                return redirect()->back()->withErrors(['Gagal mengambil data dari endpoint e-Arsip (HTTP ' . $response->status() . ').']);
+            }
+
+            $data = $response->json('data');
+            if (!is_array($data) || count($data) === 0) {
+                return redirect()->back()->withErrors(['Data dari e-Arsip kosong.']);
+            }
+
+            $count = 0;
+            foreach ($data as $item) {
+                $noSurat = $item['no_surat'] ?? null;
+                $asalSurat = $item['asal_surat'] ?? 'Tanpa Pengirim';
+                $perihal = $item['perihal'] ?? '-';
+
+                // Cek agar tidak duplikat
+                $exists = UsulanMasyarakat::where('nomor_surat', $noSurat)
+                    ->where('nama_pengusul', $asalSurat)
+                    ->where('deskripsi_usulan', $perihal)
+                    ->exists();
+
+                if (!$exists) {
+                    UsulanMasyarakat::create([
+                        'nomor_surat' => $noSurat,
+                        'nama_pengusul' => $asalSurat,
+                        'deskripsi_usulan' => $perihal,
+                        'status' => 'Menunggu',
+                    ]);
+                    $count++;
+                }
+            }
+
+            return redirect()->route('admin.usulan-masyarakat.index')->with('success', "Berhasil menarik dan menyimpan $count data baru dari e-Arsip!");
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['Terjadi kesalahan koneksi ke server e-Arsip: ' . $e->getMessage()]);
+        }
     }
 }

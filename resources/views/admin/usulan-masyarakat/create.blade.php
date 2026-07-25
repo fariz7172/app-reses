@@ -26,10 +26,16 @@
         <form action="{{ route('admin.usulan-masyarakat.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             
-            <h3 style="font-size: 16px; font-weight: 700; color: #1F6F5F; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb;">A. Informasi Pengusul</h3>
-            <div style="margin-bottom: 24px;">
-                <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Nama Pengusul (Individu / Perwakilan) *</label>
-                <input type="text" name="nama_pengusul" value="{{ old('nama_pengusul') }}" required placeholder="Contoh: Bpk. Budi / Ketua RT 05..." style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+            <h3 style="font-size: 16px; font-weight: 700; color: #1F6F5F; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb;">A. Informasi Pengusul & Surat</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Nomor Surat (Pengantar/Usulan)</label>
+                    <input type="text" name="nomor_surat" value="{{ old('nomor_surat') }}" placeholder="Contoh: 005/RT.01/RW.02/2026..." style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Nama Pengusul (Individu / Perwakilan) *</label>
+                    <input type="text" name="nama_pengusul" value="{{ old('nama_pengusul') }}" required placeholder="Contoh: Bpk. Budi / Ketua RT 05..." style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                </div>
             </div>
 
             <h3 style="font-size: 16px; font-weight: 700; color: #1F6F5F; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb;">B. Lokasi & Usulan</h3>

@@ -523,6 +523,13 @@
             </div>
 
             {{-- Navigation --}}
+            @php
+                $pkjSelesai = \App\Models\PekerjaanSda::where('progress', 100)->count();
+                $pkjBelum = \App\Models\PekerjaanSda::where('progress', '<', 100)->count();
+                
+                $usulSelesai = \App\Models\UsulanMasyarakat::where('status', 'Diterima')->count();
+                $usulBelum = \App\Models\UsulanMasyarakat::where('status', 'Menunggu')->count();
+            @endphp
             <nav class="sidebar-nav">
 
                 <p class="nav-section-label">Menu Utama</p>
@@ -547,7 +554,13 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
-                    <span>Usulan Masyarakat</span>
+                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                        <span>Usulan Masyarakat</span>
+                        <div style="display:flex; gap:4px;">
+                            @if($usulSelesai > 0)<span class="nav-badge" style="background:#059669; min-width:18px;" title="Diterima">{{ $usulSelesai }}</span>@endif
+                            @if($usulBelum > 0)<span class="nav-badge" style="background:#d97706; min-width:18px;" title="Menunggu">{{ $usulBelum }}</span>@endif
+                        </div>
+                    </div>
                 </a>
 
                   <a href="{{ route('admin.surat-permohonan.index') }}" class="nav-item {{ request()->routeIs('admin.surat-permohonan.*') ? 'active' : '' }}">
@@ -561,7 +574,13 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z"/>
                     </svg>
-                    <span>Pekerjaan SDA</span>
+                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                        <span>Pekerjaan SDA</span>
+                        <div style="display:flex; gap:4px;">
+                            @if($pkjSelesai > 0)<span class="nav-badge" style="background:#059669; min-width:18px;" title="Progress 100%">{{ $pkjSelesai }}</span>@endif
+                            @if($pkjBelum > 0)<span class="nav-badge" style="background:#d97706; min-width:18px;" title="Belum 100%">{{ $pkjBelum }}</span>@endif
+                        </div>
+                    </div>
                 </a>
 
               

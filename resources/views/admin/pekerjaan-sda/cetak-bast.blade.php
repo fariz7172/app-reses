@@ -174,6 +174,30 @@
                         <td style="width: 20px;">1.</td>
                         <td style="width: 80px;">Nama</td>
                         <td style="width: 10px;">:</td>
+                        <td>HERIA SUWANDI</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>NIP</td>
+                        <td>:</td>
+                        <td>197101272006041009</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Jabatan</td>
+                        <td>:</td>
+                        <td>KEPALA SUKU DINAS SUMBER DAYA AIR<br>KOTA ADMINISTRASI JAKARTA UTARA<br>(PA/KPA)<br>Suku Dinas Sumber Daya Air Kota Administrasi Jakarta Utara</td>
+                    </tr>
+                </table>
+                <p style="margin-top: 5px; margin-bottom: 15px; padding-left: 110px;">Untuk selanjutnya disebut sebagai <strong>PIHAK KESATU</strong></p>
+            </div>
+
+            <div class="identitas">
+                <table class="identitas-table">
+                    <tr>
+                        <td style="width: 20px;">2.</td>
+                        <td style="width: 80px;">Nama</td>
+                        <td style="width: 10px;">:</td>
                         <td>{{ $pekerjaan->pelaksana->nama ?? '..........................' }}</td>
                     </tr>
                     <tr>
@@ -186,25 +210,7 @@
                         <td></td>
                         <td>Jabatan</td>
                         <td>:</td>
-                        <td>{{ $pekerjaan->pelaksana->jabatan ?? '..........................' }}<br>Suku Dinas Sumber Daya Air Kota Administrasi Jakarta Utara</td>
-                    </tr>
-                </table>
-                <p style="margin-top: 5px; margin-bottom: 15px; padding-left: 110px;">Untuk selanjutnya disebut sebagai <strong>PIHAK KESATU</strong></p>
-            </div>
-
-            <div class="identitas">
-                <table class="identitas-table">
-                    <tr>
-                        <td style="width: 20px;">2.</td>
-                        <td style="width: 80px;">Nama</td>
-                        <td style="width: 10px;">:</td>
-                        <td>{{ $pekerjaan->vendor->jabatan ?? '..........................' }}</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>Jabatan</td>
-                        <td>:</td>
-                        <td>Direktur. {{ $pekerjaan->vendor->nama ?? '..........................' }}</td>
+                        <td> {{ $pekerjaan->pelaksana->jabatan ?? '..........................' }}</td>
                     </tr>
                 </table>
                 <p style="margin-top: 5px; margin-bottom: 15px; padding-left: 110px;">Untuk selanjutnya disebut sebagai <strong>PIHAK KEDUA</strong></p>
@@ -226,20 +232,20 @@
         <div class="tanda-tangan">
             <div class="ttd-box">
                 <div>
-                    <p style="margin:0;">PIHAK KEDUA<br>{{ $pekerjaan->vendor->nama ?? 'Nama Perusahaan' }}</p>
+                    <p style="margin:0;">PIHAK KEDUA<br>{{ $pekerjaan->pelaksana->jabatan ?? '..........................' }}</p>
                 </div>
                 <div class="ttd-space"></div>
                 <div>
-                    <p style="margin:0;"><u><strong>{{ $pekerjaan->vendor->jabatan ?? 'Nama Direktur' }}</strong></u><br>Direktur</p>
+                    <p style="margin:0;"><u><strong>{{ $pekerjaan->pelaksana->nama ?? '..........................' }}</strong></u><br>Direktur / Pelaksana</p>
                 </div>
             </div>
             <div class="ttd-box">
                 <div>
-                    <p style="margin:0;">PIHAK KESATU<br>{{ $pekerjaan->pelaksana->jabatan ?? 'Kepala Seksi' }}<br></p>
+                    <p style="margin:0;">PIHAK KESATU<br>KEPALA SUKU DINAS SUMBER DAYA AIR<br>KOTA ADMINISTRASI JAKARTA UTARA<br>(PA/KPA)<br>Suku Dinas Sumber Daya Air Kota Administrasi Jakarta Utara<br></p>
                 </div>
                 <div class="ttd-space"></div>
                 <div>
-                    <p style="margin:0;"><u><strong>{{ $pekerjaan->pelaksana->nama ?? 'Nama Pelaksana' }}</strong></u><br>NIP: {{ $pekerjaan->pelaksana->nip ?? '..........................' }}</p>
+                    <p style="margin:0;"><u><strong>HERIA SUWANDI</strong></u><br>NIP: 197101272006041009</p>
                 </div>
             </div>
         </div>

@@ -47,14 +47,14 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
                 <div>
                     <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Sumber Data *</label>
-                    <select name="sumber_data" required style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                    <select name="sumber_data" id="select_sumber_data" required style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
                         <option value="Reses" {{ old('sumber_data', $survei_terpilih ? 'Reses' : '') == 'Reses' ? 'selected' : '' }}>Reses</option>
                         <option value="Musrenbang" {{ old('sumber_data') == 'Musrenbang' ? 'selected' : '' }}>Musrenbang</option>
                         <option value="Masyarakat" {{ old('sumber_data') == 'Masyarakat' ? 'selected' : '' }}>Masyarakat</option>
                         <option value="Lainnya" {{ old('sumber_data') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
                     </select>
                 </div>
-                <div>
+                <div id="div_nama_dewan" style="{{ old('sumber_data') == 'Masyarakat' ? 'display: none;' : '' }}">
                     <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Nama Dewan (Jika dari Reses)</label>
                     <select name="id_dewan" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
                         <option value="">-- Pilih Dewan --</option>
@@ -170,15 +170,6 @@
                         <option value="">-- Pilih Pelaksana --</option>
                         @foreach($pelaksanas as $p)
                             <option value="{{ $p->id }}" {{ old('id_pelaksana') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Vendor (Perusahaan)</label>
-                    <select name="id_vendor" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
-                        <option value="">-- Pilih Vendor --</option>
-                        @foreach($vendors as $v)
-                            <option value="{{ $v->id }}" {{ old('id_vendor') == $v->id ? 'selected' : '' }}>{{ $v->nama }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -383,5 +374,14 @@
             }
         }
     };
+
+    document.getElementById('select_sumber_data').addEventListener('change', function() {
+        let divDewan = document.getElementById('div_nama_dewan');
+        if (this.value === 'Masyarakat') {
+            divDewan.style.display = 'none';
+        } else {
+            divDewan.style.display = '';
+        }
+    });
 </script>
 @endsection

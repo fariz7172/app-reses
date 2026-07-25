@@ -57,6 +57,18 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                 </svg>
             </div>
+            @php
+                $pkjSelesai = \App\Models\PekerjaanSda::where('progress', 100)->count();
+                $pkjBelum = \App\Models\PekerjaanSda::where('progress', '<', 100)->count();
+            @endphp
+            <div style="display:flex; gap:6px;">
+                @if($pkjSelesai > 0)
+                    <span class="badge" style="background-color: #d1fae5; color: #059669; padding: 2px 8px; font-size: 10px; border-radius: 999px; font-weight: 600;">{{ $pkjSelesai }} Selesai</span>
+                @endif
+                @if($pkjBelum > 0)
+                    <span class="badge" style="background-color: #fef3c7; color: #d97706; padding: 2px 8px; font-size: 10px; border-radius: 999px; font-weight: 600;">{{ $pkjBelum }} Belum</span>
+                @endif
+            </div>
         </div>
         <p style="font-size:10.5px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px;">Total Pekerjaan SDA</p>
         <p style="font-size:26px;font-weight:700;color:#1f2937;margin:0 0 6px;line-height:1;">{{ number_format($totalPekerjaan, 0, ',', '.') }}</p>
@@ -129,7 +141,17 @@
     <div class="content-card">
         <div class="content-card-header">
             <div>
-                <p class="content-card-title">Pekerjaan SDA Terbaru</p>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <p class="content-card-title">Pekerjaan SDA Terbaru</p>
+                    <div style="display:flex; gap:6px;">
+                        @if($pkjSelesai > 0)
+                            <span class="badge" style="background-color: #d1fae5; color: #059669; padding: 2px 8px; font-size: 10px; border-radius: 999px; font-weight: 600;">{{ $pkjSelesai }} Selesai</span>
+                        @endif
+                        @if($pkjBelum > 0)
+                            <span class="badge" style="background-color: #fef3c7; color: #d97706; padding: 2px 8px; font-size: 10px; border-radius: 999px; font-weight: 600;">{{ $pkjBelum }} Belum Selesai</span>
+                        @endif
+                    </div>
+                </div>
                 <p style="font-size:12px;color:#9ca3af;margin:3px 0 0;">5 data terakhir ditambahkan</p>
             </div>
             <a href="{{ route('admin.pekerjaan-sda.index') }}" class="btn btn-ghost" style="font-size:12px;padding:5px 12px;">
@@ -191,8 +213,22 @@
 
     {{-- Usulan Masyarakat Feed --}}
     <div class="content-card">
-        <div class="content-card-header">
-            <p class="content-card-title">Usulan Masuk Terbaru</p>
+        <div class="content-card-header" style="flex-wrap: wrap; gap: 10px;">
+            <div>
+                <p class="content-card-title">Usulan Masuk Terbaru</p>
+                @php
+                    $progressSelesai = \App\Models\PekerjaanSda::where('progress', 100)->count();
+                    $progressBelum = \App\Models\PekerjaanSda::where('progress', '<', 100)->count();
+                @endphp
+                <div style="display:flex; gap:6px; margin-top: 6px;">
+                    @if($progressSelesai > 0)
+                        <span class="badge" style="background-color: #d1fae5; color: #059669; padding: 2px 8px; font-size: 10px; border-radius: 999px; font-weight: 600;">{{ $progressSelesai }} Progress 100%</span>
+                    @endif
+                    @if($progressBelum > 0)
+                        <span class="badge" style="background-color: #fef3c7; color: #d97706; padding: 2px 8px; font-size: 10px; border-radius: 999px; font-weight: 600;">{{ $progressBelum }} Belum 100%</span>
+                    @endif
+                </div>
+            </div>
             <a href="{{ route('admin.usulan-masyarakat.index') }}" style="width:28px;height:28px;border-radius:8px;background:transparent;display:flex;align-items:center;justify-content:center;color:#9ca3af;" onmouseover="this.style.background='#F1F7D4'" onmouseout="this.style.background='transparent'">
                 <svg xmlns="http://www.w3.org/2000/svg" style="width:15px;height:15px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             </a>

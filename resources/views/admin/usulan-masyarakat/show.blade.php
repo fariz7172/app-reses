@@ -36,6 +36,10 @@
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <div>
+                        <span style="display: block; font-size: 12px; color: #64748b; font-weight: 600; margin-bottom: 4px;">Nomor Surat</span>
+                        <strong style="color: #0f172a;">{{ $usulan->nomor_surat ?: '-' }}</strong>
+                    </div>
+                    <div>
                         <span style="display: block; font-size: 12px; color: #64748b; font-weight: 600; margin-bottom: 4px;">Nama Pengusul</span>
                         <strong style="color: #0f172a;">{{ $usulan->nama_pengusul }}</strong>
                     </div>

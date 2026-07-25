@@ -31,14 +31,14 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
                 <div>
                     <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Sumber Data *</label>
-                    <select name="sumber_data" required style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                    <select name="sumber_data" id="select_sumber_data" required style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
                         <option value="Reses" {{ $pekerjaan->sumber_data == 'Reses' ? 'selected' : '' }}>Reses</option>
                         <option value="Musrenbang" {{ $pekerjaan->sumber_data == 'Musrenbang' ? 'selected' : '' }}>Musrenbang</option>
                         <option value="Masyarakat" {{ $pekerjaan->sumber_data == 'Masyarakat' ? 'selected' : '' }}>Masyarakat</option>
                         <option value="Lainnya" {{ $pekerjaan->sumber_data == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
                     </select>
                 </div>
-                <div>
+                <div id="div_nama_dewan" style="{{ $pekerjaan->sumber_data == 'Masyarakat' ? 'display: none;' : '' }}">
                     <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Nama Dewan (Jika dari Reses)</label>
                     <select name="id_dewan" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
                         <option value="">-- Pilih Dewan --</option>
@@ -148,23 +148,16 @@
                     <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Tahun Dikerjakan</label>
                     <input type="number" name="tahun_dikerjakan" value="{{ old('tahun_dikerjakan', $pekerjaan->tahun_dikerjakan) }}" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
                 </div>
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Pelaksana</label>
-                    <select name="id_pelaksana" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
-                        <option value="">-- Pilih Pelaksana --</option>
-                        @foreach($pelaksanas as $p)
-                            <option value="{{ $p->id }}" {{ old('id_pelaksana', $pekerjaan->id_pelaksana) == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Vendor (Perusahaan)</label>
-                    <select name="id_vendor" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
-                        <option value="">-- Pilih Vendor --</option>
-                        @foreach($vendors as $v)
-                            <option value="{{ $v->id }}" {{ old('id_vendor', $pekerjaan->id_vendor) == $v->id ? 'selected' : '' }}>{{ $v->nama }}</option>
-                        @endforeach
-                    </select>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Pelaksana</label>
+                        <select name="id_pelaksana" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                            <option value="">-- Pilih Pelaksana --</option>
+                            @foreach($pelaksanas as $p)
+                                <option value="{{ $p->id }}" {{ old('id_pelaksana', $pekerjaan->id_pelaksana) == $p->id ? 'selected' : '' }}>{{ $p->nama }} - {{ $p->jabatan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -387,5 +380,14 @@
             }
         }
     };
+
+    document.getElementById('select_sumber_data').addEventListener('change', function() {
+        let divDewan = document.getElementById('div_nama_dewan');
+        if (this.value === 'Masyarakat') {
+            divDewan.style.display = 'none';
+        } else {
+            divDewan.style.display = '';
+        }
+    });
 </script>
 @endsection

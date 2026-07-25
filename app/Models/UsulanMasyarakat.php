@@ -10,6 +10,7 @@ class UsulanMasyarakat extends Model
     use HasFactory;
 
     protected $fillable = [
+        'nomor_surat',
         'nama_pengusul',
         'id_kecamatan',
         'id_kelurahan',

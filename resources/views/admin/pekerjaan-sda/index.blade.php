@@ -81,7 +81,7 @@
                     </td>
                     <td style="padding: 12px; display: flex; gap: 8px;">
                         <a href="{{ route('admin.pekerjaan-sda.show', $item->id) }}" style="color: #1d4ed8; text-decoration: none; font-weight: 500;">Detail</a>
-                        <a href="{{ route('admin.pekerjaan-sda.edit', $item->id) }}" style="color: #059669; text-decoration: none; font-weight: 500;">Edit</a>
+                        <a href="{{ route('admin.pekerjaan-sda.edit', $item->id) }}" style="color: #059669; text-decoration: none; font-weight: 500;">Proses</a>
                         @if($item->progress == 100)
                             <a href="{{ route('admin.pekerjaan-sda.cetak-bast', $item->id) }}" target="_blank" style="color: #ea580c; text-decoration: none; font-weight: 500;">Cetak BAST</a>
                         @endif
