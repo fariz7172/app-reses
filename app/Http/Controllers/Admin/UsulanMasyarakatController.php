@@ -191,7 +191,8 @@ class UsulanMasyarakatController extends Controller
     public function importEarsip()
     {
         try {
-            $response = Http::timeout(10)->get('http://127.0.0.1:8000/api/reses');
+            $apiUrl = env('EARSIP_API_URL', 'https://e-arsip.farizahmad.com/api/reses');
+            $response = Http::timeout(10)->get($apiUrl);
 
             if (!$response->successful() || $response->json('status') !== 'success') {
                 return redirect()->back()->withErrors(['Gagal mengambil data dari endpoint e-Arsip (HTTP ' . $response->status() . ').']);
