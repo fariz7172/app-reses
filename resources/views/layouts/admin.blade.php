@@ -486,6 +486,82 @@
         .hidden { display: none !important; }
         .flex   { display: flex; }
         .divide-y > * + * { border-top: 1px solid #f9fafb; }
+
+        /* ==========================================
+           PAGINATION STYLES
+        ========================================== */
+        .pagination {
+            display: flex;
+            padding-left: 0;
+            list-style: none !important;
+            gap: 6px;
+            align-items: center;
+            margin: 0;
+            flex-wrap: wrap;
+        }
+        .page-item {
+            list-style: none !important;
+            display: inline-flex;
+            margin: 0;
+            padding: 0;
+        }
+        .page-item .page-link,
+        .pagination a,
+        .pagination span {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1F6F5F;
+            text-decoration: none;
+            background-color: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            line-height: 1;
+        }
+        .page-item .page-link:hover,
+        .pagination a:hover {
+            background-color: #F1F7D4;
+            border-color: #1F6F5F;
+            color: #1F6F5F;
+        }
+        .page-item.active .page-link,
+        .pagination .active span {
+            z-index: 3;
+            color: #fff !important;
+            background-color: #1F6F5F !important;
+            border-color: #1F6F5F !important;
+        }
+        .page-item.disabled .page-link,
+        .pagination .disabled span {
+            color: #9ca3af !important;
+            pointer-events: none;
+            background-color: #f9fafb !important;
+            border-color: #e5e7eb !important;
+        }
+        /* Handle SVG inside pagination */
+        nav[role="navigation"] svg,
+        .pagination svg,
+        .page-link svg {
+            width: 16px !important;
+            height: 16px !important;
+            max-width: 16px !important;
+            max-height: 16px !important;
+        }
+        nav[role="navigation"] {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
     </style>
 
     @stack('head')
