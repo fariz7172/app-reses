@@ -7,10 +7,10 @@ use App\Http\Controllers\Admin\PekerjaanSdaController;
 use App\Http\Controllers\Admin\SuratPermohonanController;
 use App\Http\Controllers\Admin\SurveiResesController;
 use App\Http\Controllers\Admin\MasterDataController;
-use App\Http\Controllers\Admin\UsulanMasyarakatController;
 use App\Http\Controllers\Admin\FraksiController;
 use App\Http\Controllers\Admin\PelaksanaController;
 use App\Http\Controllers\Admin\VendorController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,10 +37,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('pekerjaan-sda/map', [PekerjaanSdaController::class, 'mapView'])->name('pekerjaan-sda.map');
     Route::get('pekerjaan-sda/{id}/cetak-bast', [PekerjaanSdaController::class, 'cetakBast'])->name('pekerjaan-sda.cetak-bast');
     Route::resource('pekerjaan-sda', PekerjaanSdaController::class);
+    Route::post('surat-permohonan/import-earsip', [SuratPermohonanController::class, 'importEarsip'])->name('surat-permohonan.import-earsip');
+    Route::post('surat-permohonan/{id}/proses', [SuratPermohonanController::class, 'prosesPekerjaan'])->name('surat-permohonan.proses');
     Route::resource('surat-permohonan', SuratPermohonanController::class);
-    Route::post('usulan-masyarakat/{id}/terima', [UsulanMasyarakatController::class, 'terimaUsulan'])->name('usulan-masyarakat.terima');
-    Route::post('usulan-masyarakat/import-earsip', [UsulanMasyarakatController::class, 'importEarsip'])->name('usulan-masyarakat.import-earsip');
-    Route::resource('usulan-masyarakat', UsulanMasyarakatController::class);
     Route::resource('fraksi', FraksiController::class);
     Route::resource('pelaksana', PelaksanaController::class);
     Route::resource('vendor', VendorController::class);
@@ -59,9 +58,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     });
 
     // Placeholders for sidebar links that don't have controllers yet
-    Route::get('/analytics', function () { return view('admin.dashboard'); })->name('analytics');
-    Route::get('/users', function () { return view('admin.dashboard'); })->name('users');
-    Route::get('/reports', function () { return view('admin.dashboard'); })->name('reports');
-    Route::get('/settings', function () { return view('admin.dashboard'); })->name('settings');
+    Route::get('/analytics', function () { return redirect()->route('admin.dashboard'); })->name('analytics');
+    Route::get('/reports', function () { return redirect()->route('admin.dashboard'); })->name('reports');
+    
+    // User Management (Settings)
+    Route::resource('users', UserController::class);
 
 });

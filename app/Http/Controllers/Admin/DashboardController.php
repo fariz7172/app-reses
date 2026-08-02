@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PekerjaanSda;
-use App\Models\UsulanMasyarakat;
 use App\Models\SurveiReses;
 use App\Models\SuratPermohonan;
 
@@ -13,12 +12,15 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        // Kecamatan tidak punya akses ke Dashboard
+        if (auth()->check() && auth()->user()->role === 'Kecamatan') {
+            return redirect()->route('admin.surat-permohonan.index');
+        }
         // 1. Hitung Statistik (Stat Cards)
         $totalPekerjaan = PekerjaanSda::count();
-        $totalUsulan = UsulanMasyarakat::count();
-        $usulanMenunggu = UsulanMasyarakat::where('status', 'Menunggu')->count();
-        $totalReses = SurveiReses::count();
         $totalSurat = SuratPermohonan::count();
+        $suratMenunggu = SuratPermohonan::where('status', 'Menunggu')->count();
+        $totalReses = SurveiReses::count();
 
         // 2. Data Terbaru
         $pekerjaanTerbaru = PekerjaanSda::with(['kecamatan', 'kelurahan'])
@@ -26,18 +28,17 @@ class DashboardController extends Controller
                                 ->take(5)
                                 ->get();
         
-        $usulanTerbaru = UsulanMasyarakat::orderBy('created_at', 'desc')
+        $suratTerbaru = SuratPermohonan::orderBy('created_at', 'desc')
                                 ->take(5)
                                 ->get();
 
         return view('admin.dashboard', compact(
             'totalPekerjaan', 
-            'totalUsulan', 
-            'usulanMenunggu', 
-            'totalReses', 
             'totalSurat', 
+            'suratMenunggu', 
+            'totalReses', 
             'pekerjaanTerbaru', 
-            'usulanTerbaru'
+            'suratTerbaru'
         ));
     }
 }

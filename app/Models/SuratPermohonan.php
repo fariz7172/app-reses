@@ -22,6 +22,8 @@ class SuratPermohonan extends Model
         'detail_pemohon',
         'deskripsi',
         'hasil_survei',
+        'latitude',
+        'longitude',
         'photo',
         'status',
         'catatan'

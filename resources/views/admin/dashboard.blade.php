@@ -47,7 +47,7 @@
 {{-- ====================================================
      STAT CARDS — 4 columns responsive
 ==================================================== --}}
-<div class="grid-4col mb-16">
+<div class="grid-3col mb-16">
 
     {{-- Card 1: Pekerjaan SDA --}}
     <div class="stat-card">
@@ -77,22 +77,22 @@
         </p>
     </div>
 
-    {{-- Card 2: Usulan Masyarakat --}}
+    {{-- Card 2: Total Surat & Usulan --}}
     <div class="stat-card">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:#dceee2;display:flex;align-items:center;justify-content:center;">
                 <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;color:#3f7a58;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
             </div>
-            @if($usulanMenunggu > 0)
-                <span class="badge badge-warning">{{ $usulanMenunggu }} Menunggu</span>
+            @if($suratMenunggu > 0)
+                <span class="badge badge-warning">{{ $suratMenunggu }} Menunggu Proses</span>
             @endif
         </div>
-        <p style="font-size:10.5px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px;">Usulan Masyarakat</p>
-        <p style="font-size:26px;font-weight:700;color:#1f2937;margin:0 0 6px;line-height:1;">{{ number_format($totalUsulan, 0, ',', '.') }}</p>
+        <p style="font-size:10.5px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px;">Total Surat & Usulan</p>
+        <p style="font-size:26px;font-weight:700;color:#1f2937;margin:0 0 6px;line-height:1;">{{ number_format($totalSurat, 0, ',', '.') }}</p>
         <p style="font-size:11px;color:#3f7a58;display:flex;align-items:center;gap:4px;margin:0;">
-            Total aduan masyarakat
+            Surat permohonan dan aduan
         </p>
     </div>
 
@@ -112,21 +112,7 @@
         </p>
     </div>
 
-    {{-- Card 4: Surat Permohonan --}}
-    <div class="stat-card">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">
-            <div style="width:44px;height:44px;border-radius:12px;background:#dcfce7;display:flex;align-items:center;justify-content:center;">
-                <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;color:#16a34a;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-            </div>
-        </div>
-        <p style="font-size:10.5px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px;">Surat Permohonan</p>
-        <p style="font-size:22px;font-weight:700;color:#1f2937;margin:0 0 6px;line-height:1;">{{ number_format($totalSurat, 0, ',', '.') }}</p>
-        <p style="font-size:11px;color:#16a34a;display:flex;align-items:center;gap:4px;margin:0;">
-            Surat permohonan survei
-        </p>
-    </div>
+
 
 </div>
 
@@ -229,12 +215,12 @@
                     @endif
                 </div>
             </div>
-            <a href="{{ route('admin.usulan-masyarakat.index') }}" style="width:28px;height:28px;border-radius:8px;background:transparent;display:flex;align-items:center;justify-content:center;color:#9ca3af;" onmouseover="this.style.background='#F1F7D4'" onmouseout="this.style.background='transparent'">
+            <a href="{{ route('admin.surat-permohonan.index') }}" style="width:28px;height:28px;border-radius:8px;background:transparent;display:flex;align-items:center;justify-content:center;color:#9ca3af;" onmouseover="this.style.background='#F1F7D4'" onmouseout="this.style.background='transparent'">
                 <svg xmlns="http://www.w3.org/2000/svg" style="width:15px;height:15px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             </a>
         </div>
         <div style="padding:16px 20px;">
-            @foreach($usulanTerbaru as $ut)
+            @foreach($suratTerbaru as $ut)
             <div style="display:flex;align-items:flex-start;gap:10px;{{ !$loop->last ? 'padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid #f9fafb;' : '' }}">
                 <div style="width:30px;height:30px;border-radius:8px;background:{{ $ut->status == 'Menunggu' ? '#fef9c3' : '#dceee2' }};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                     <svg xmlns="http://www.w3.org/2000/svg" style="width:14px;height:14px;color:{{ $ut->status == 'Menunggu' ? '#a16207' : '#3f7a58' }};" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -242,7 +228,7 @@
                     </svg>
                 </div>
                 <div style="flex:1;min-width:0;">
-                    <p style="font-size:12.5px;color:#4b5563;margin:0;line-height:1.5;">Usulan dari <strong>{{ $ut->nama_pengusul }}</strong> ({{ Str::limit($ut->deskripsi_usulan, 30) }})</p>
+                    <p style="font-size:12.5px;color:#4b5563;margin:0;line-height:1.5;">Usulan/Surat dari <strong>{{ $ut->dari }}</strong> ({{ Str::limit($ut->deskripsi, 30) }})</p>
                     <p style="font-size:11px;color:#9ca3af;margin:3px 0 0;display:flex;align-items:center;gap:4px;">
                         <svg xmlns="http://www.w3.org/2000/svg" style="width:11px;height:11px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         {{ $ut->created_at->diffForHumans() }}
@@ -250,7 +236,7 @@
                 </div>
             </div>
             @endforeach
-            @if($usulanTerbaru->count() == 0)
+            @if($suratTerbaru->count() == 0)
                 <p style="font-size:12px;color:#9ca3af;text-align:center;">Belum ada usulan masyarakat.</p>
             @endif
         </div>
@@ -278,7 +264,7 @@
                 <span class="qa-label" style="font-size:12.5px;font-weight:600;color:#374151;text-align:center;line-height:1.3;transition:color 0.2s;">Tambah Pekerjaan SDA</span>
             </a>
             
-            <a href="{{ route('admin.usulan-masyarakat.create') }}" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 12px;
+            <a href="{{ route('admin.surat-permohonan.create') }}" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 12px;
                            border-radius:12px;border:none;background:#dceee2;cursor:pointer;
                            transition:all 0.2s;font-family:inherit;text-decoration:none;"
                     onmouseover="this.style.background='#1F6F5F';this.style.color='white';this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(0,0,0,0.12)';this.querySelector('.qa-icon').style.color='white';this.querySelector('.qa-label').style.color='white';"

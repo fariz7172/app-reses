@@ -137,6 +137,12 @@
                     <th style="width: 30%;">Lokasi / Alamat</th>
                     <td>{{ $surat->lokasi ?? '-' }} <br> Kec. {{ $surat->kecamatan ? $surat->kecamatan->nama_kecamatan : '-' }}, Kel. {{ $surat->kelurahan ? $surat->kelurahan->nama_kelurahan : '-' }}</td>
                 </tr>
+                @if($surat->latitude && $surat->longitude)
+                <tr>
+                    <th>Titik Koordinat</th>
+                    <td>{{ $surat->latitude }}, {{ $surat->longitude }}</td>
+                </tr>
+                @endif
                 <tr>
                     <th>Deskripsi Pekerjaan</th>
                     <td>{{ $surat->deskripsi ?? '-' }}</td>

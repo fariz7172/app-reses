@@ -126,12 +126,24 @@
             <p style="font-size: 11px; color: #64748b; margin-top: -10px; margin-bottom: 16px;">Dari data Survei Reses & Usulan Masyarakat</p>
             
             @php
-                $fotosProgress = null;
-                if ($pekerjaan->surveiReses && $pekerjaan->surveiReses->foto) {
-                    $fotosProgress = json_decode($pekerjaan->surveiReses->foto, true);
-                } elseif ($pekerjaan->sumber_data == 'Masyarakat' && $pekerjaan->suratPermohonan && $pekerjaan->suratPermohonan->photo) {
-                    $fotosProgress = json_decode($pekerjaan->suratPermohonan->photo, true);
+                $fotosProgress = [];
+                // Foto dari Pekerjaan SDA (After/Progress)
+                if ($pekerjaan->photo) {
+                    $arr = json_decode($pekerjaan->photo, true);
+                    if (is_array($arr)) $fotosProgress = array_merge($fotosProgress, $arr);
                 }
+                // Foto dari Survei Reses (Before)
+                if ($pekerjaan->surveiReses && $pekerjaan->surveiReses->foto) {
+                    $arr = json_decode($pekerjaan->surveiReses->foto, true);
+                    if (is_array($arr)) $fotosProgress = array_merge($fotosProgress, $arr);
+                }
+                // Foto dari Surat Permohonan (Before)
+                if ($pekerjaan->suratPermohonan && $pekerjaan->suratPermohonan->photo) {
+                    $arr = json_decode($pekerjaan->suratPermohonan->photo, true);
+                    if (is_array($arr)) $fotosProgress = array_merge($fotosProgress, $arr);
+                }
+                // Hapus duplikat jika ada foto yang sama
+                $fotosProgress = array_unique($fotosProgress);
             @endphp
 
             @if(is_array($fotosProgress) && count($fotosProgress) > 0)
@@ -154,21 +166,27 @@
             <!-- BEFORE -->
             <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px;">
                 <h4 style="font-size: 14px; font-weight: 700; color: #dc2626; margin-bottom: 4px; text-align: center;">KONDISI BEFORE (SEBELUM)</h4>
-                <p style="font-size: 11px; color: #64748b; text-align: center; margin-bottom: 16px;">Dari data Surat Permohonan</p>
+                @php 
+                    $fotosBefore = [];
+                    $sumberBefore = '';
+                    if ($pekerjaan->suratPermohonan && $pekerjaan->suratPermohonan->photo) {
+                        $fotosBefore = json_decode($pekerjaan->suratPermohonan->photo, true) ?? [];
+                        $sumberBefore = 'Surat Permohonan / Usulan Masyarakat';
+                    } elseif ($pekerjaan->surveiReses && $pekerjaan->surveiReses->foto) {
+                        $fotosBefore = json_decode($pekerjaan->surveiReses->foto, true) ?? [];
+                        $sumberBefore = 'Survei Reses Anggota Dewan';
+                    }
+                @endphp
+                <p style="font-size: 11px; color: #64748b; text-align: center; margin-bottom: 16px;">Dari data {{ $sumberBefore ?: 'Awal (Before)' }}</p>
 
-                @if($pekerjaan->suratPermohonan && $pekerjaan->suratPermohonan->photo)
-                    @php $fotosBefore = json_decode($pekerjaan->suratPermohonan->photo, true); @endphp
-                    @if(is_array($fotosBefore) && count($fotosBefore) > 0)
-                        <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
-                            @foreach($fotosBefore as $fb)
-                                <img src="{{ asset('storage/'.str_replace('public/', '', $fb)) }}" alt="Before" style="width: 100%; max-width: 200px; height: 140px; object-fit: cover; border-radius: 6px; border: 1px solid #f87171;">
-                            @endforeach
-                        </div>
-                    @else
-                        <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada foto yang diunggah</div>
-                    @endif
+                @if(count($fotosBefore) > 0)
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+                        @foreach($fotosBefore as $fb)
+                            <img src="{{ asset('storage/'.str_replace('public/', '', $fb)) }}" alt="Before" style="width: 100%; max-width: 200px; height: 140px; object-fit: cover; border-radius: 6px; border: 1px solid #f87171;">
+                        @endforeach
+                    </div>
                 @else
-                    <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada data Surat Permohonan yang terkait</div>
+                    <div style="padding: 24px; text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">Belum ada foto KONDISI SEBELUM yang terkait</div>
                 @endif
             </div>
 
@@ -178,7 +196,10 @@
                 <p style="font-size: 11px; color: #64748b; text-align: center; margin-bottom: 16px;">Dari data Pekerjaan SDA</p>
                 
                 @if($pekerjaan->photo)
-                    @php $fotosAfter = json_decode($pekerjaan->photo, true); @endphp
+                    @php 
+                        $fotosAfter = json_decode($pekerjaan->photo, true) ?? []; 
+                        $fotosAfter = array_diff($fotosAfter, $fotosBefore ?? []);
+                    @endphp
                     @if(is_array($fotosAfter) && count($fotosAfter) > 0)
                         <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
                             @foreach($fotosAfter as $fa)

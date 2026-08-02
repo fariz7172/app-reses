@@ -17,7 +17,14 @@ class PekerjaanSdaController extends Controller
 {
     public function index()
     {
-        $pekerjaan = PekerjaanSda::with(['dewan', 'kecamatan', 'kelurahan'])->latest()->get();
+        $query = PekerjaanSda::with(['dewan', 'kecamatan', 'kelurahan', 'suratPermohonan'])->latest();
+        
+        $kecamatanId = $this->getKecamatanId();
+        if ($kecamatanId) {
+            $query->where('id_kecamatan', $kecamatanId);
+        }
+
+        $pekerjaan = $query->get();
         return view('admin.pekerjaan-sda.index', compact('pekerjaan'));
     }
 
@@ -31,10 +38,19 @@ class PekerjaanSdaController extends Controller
         }
 
         // Ambil data survei reses yang belum di eskalasi
-        $survei_reses_list = SurveiReses::whereDoesntHave('pekerjaanSda')->get();
+        $kecamatanId = $this->getKecamatanId();
+
+        $surveiQuery = SurveiReses::whereDoesntHave('pekerjaanSda');
+        if ($kecamatanId) {
+            $surveiQuery->where('id_kecamatan', $kecamatanId);
+            $dewans = Dewan::where('id_kecamatan', $kecamatanId)->get();
+            $kecamatans = Kecamatan::where('id', $kecamatanId)->get();
+        } else {
+            $dewans = Dewan::all();
+            $kecamatans = Kecamatan::all();
+        }
         
-        $dewans = Dewan::all();
-        $kecamatans = Kecamatan::all();
+        $survei_reses_list = $surveiQuery->get();
         $kelurahans = Kelurahan::all();
         $pelaksanas = Pelaksana::all();
         $vendors = Vendor::all();
@@ -163,8 +179,21 @@ class PekerjaanSdaController extends Controller
     public function edit(string $id)
     {
         $pekerjaan = PekerjaanSda::findOrFail($id);
-        $dewans = Dewan::all();
-        $kecamatans = Kecamatan::all();
+        
+        $kecamatanId = $this->getKecamatanId();
+        
+        if ($kecamatanId && $pekerjaan->id_kecamatan != $kecamatanId) {
+            return redirect()->route('admin.pekerjaan-sda.index')->with('error', 'Akses ditolak.');
+        }
+
+        if ($kecamatanId) {
+            $dewans = Dewan::where('id_kecamatan', $kecamatanId)->get();
+            $kecamatans = Kecamatan::where('id', $kecamatanId)->get();
+        } else {
+            $dewans = Dewan::all();
+            $kecamatans = Kecamatan::all();
+        }
+        
         $kelurahans = Kelurahan::all();
         $pelaksanas = Pelaksana::all();
         $vendors = Vendor::all();
@@ -269,7 +298,17 @@ class PekerjaanSdaController extends Controller
     public function destroy(string $id)
     {
         $pekerjaan = PekerjaanSda::findOrFail($id);
+        
+        // Batalkan proses pada Surat Permohonan jika terkait
+        $surat = SuratPermohonan::where('id_pekerjaan_sda', $id)->first();
+        if ($surat) {
+            $surat->update([
+                'id_pekerjaan_sda' => null,
+                'status' => 'Menunggu'
+            ]);
+        }
+
         $pekerjaan->delete();
-        return back()->with('success', 'Data Pekerjaan dihapus!');
+        return back()->with('success', 'Data Pekerjaan dihapus. Usulan terkait telah dikembalikan ke status Menunggu!');
     }
 }

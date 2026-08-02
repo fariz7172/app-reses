@@ -12,7 +12,14 @@ class SurveiResesController extends Controller
      */
     public function index()
     {
-        $survei = \App\Models\SurveiReses::with(['dewan', 'kecamatan', 'kelurahan'])->latest()->get();
+        $query = \App\Models\SurveiReses::with(['dewan', 'kecamatan', 'kelurahan'])->latest();
+        
+        $kecamatanId = $this->getKecamatanId();
+        if ($kecamatanId) {
+            $query->where('id_kecamatan', $kecamatanId);
+        }
+
+        $survei = $query->get();
         return view('admin.survei-reses.index', compact('survei'));
     }
 
@@ -21,8 +28,15 @@ class SurveiResesController extends Controller
      */
     public function create()
     {
-        $dewans = \App\Models\Dewan::all();
-        $kecamatans = \App\Models\Kecamatan::all();
+        $kecamatanId = $this->getKecamatanId();
+        
+        if ($kecamatanId) {
+            $dewans = \App\Models\Dewan::where('id_kecamatan', $kecamatanId)->get();
+            $kecamatans = \App\Models\Kecamatan::where('id', $kecamatanId)->get();
+        } else {
+            $dewans = \App\Models\Dewan::all();
+            $kecamatans = \App\Models\Kecamatan::all();
+        }
         $kelurahans = \App\Models\Kelurahan::all(); // Alternatively, loaded via AJAX
         
         return view('admin.survei-reses.create', compact('dewans', 'kecamatans', 'kelurahans'));
@@ -109,8 +123,21 @@ class SurveiResesController extends Controller
     public function edit(string $id)
     {
         $survei = \App\Models\SurveiReses::findOrFail($id);
-        $dewans = \App\Models\Dewan::all();
-        $kecamatans = \App\Models\Kecamatan::all();
+        
+        $kecamatanId = $this->getKecamatanId();
+        
+        if ($kecamatanId) {
+            $dewans = \App\Models\Dewan::where('id_kecamatan', $kecamatanId)->get();
+            $kecamatans = \App\Models\Kecamatan::where('id', $kecamatanId)->get();
+            
+            // Keamanan: cegah edit data yang bukan milik kecamatannya
+            if ($survei->id_kecamatan != $kecamatanId) {
+                return redirect()->route('admin.survei-reses.index')->with('error', 'Akses ditolak.');
+            }
+        } else {
+            $dewans = \App\Models\Dewan::all();
+            $kecamatans = \App\Models\Kecamatan::all();
+        }
         $kelurahans = \App\Models\Kelurahan::all();
         
         return view('admin.survei-reses.edit', compact('survei', 'dewans', 'kecamatans', 'kelurahans'));

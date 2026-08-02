@@ -85,10 +85,10 @@
                         @if($item->progress == 100)
                             <a href="{{ route('admin.pekerjaan-sda.cetak-bast', $item->id) }}" target="_blank" style="color: #ea580c; text-decoration: none; font-weight: 500;">Cetak BAST</a>
                         @endif
-                        <form action="{{ route('admin.pekerjaan-sda.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?');" style="display:inline;">
+                        <form action="{{ route('admin.pekerjaan-sda.destroy', $item->id) }}" method="POST" onsubmit="return confirm('{{ $item->suratPermohonan ? 'Yakin menghapus Pekerjaan SDA ini? Surat/Usulan yang terkait akan dibatalkan prosesnya dan kembali berstatus Menunggu.' : 'Yakin hapus data Pekerjaan SDA ini secara permanen?' }}');" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" style="color: #dc2626; background: none; border: none; cursor: pointer; font-weight: 500; padding: 0;">Hapus</button>
+                            <button type="submit" style="color: #dc2626; background: none; border: none; cursor: pointer; font-weight: 500; padding: 0;">{{ $item->suratPermohonan ? 'Batal Proses' : 'Hapus' }}</button>
                         </form>
                     </td>
                 </tr>

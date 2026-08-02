@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+    #map { height: 350px; border-radius: 8px; z-index: 1; border: 1px solid #d1d5db; }
+</style>
 <div class="content-card">
     <div class="content-card-header">
         <h2 class="content-card-title">Edit Surat Permohonan / Laporan /Hasil Survei</h2>
@@ -66,8 +71,22 @@
             </div>
             
             <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Titik Koordinat (Peta)</label>
+                <div id="map" style="margin-bottom: 10px;"></div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" name="latitude" id="latitude" value="{{ old('latitude', $surat->latitude) }}" placeholder="Latitude" style="flex:1; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;" readonly>
+                    <input type="text" name="longitude" id="longitude" value="{{ old('longitude', $surat->longitude) }}" placeholder="Longitude" style="flex:1; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;" readonly>
+                </div>
+                <small style="color: #6b7280; display: block; margin-top: 5px;">Klik pada peta untuk menentukan titik koordinat.</small>
+            </div>
+
+            <div style="margin-bottom: 20px;">
                 <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Lokasi</label>
-                <textarea name="lokasi" rows="2" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">{{ old('lokasi', $surat->lokasi) }}</textarea>
+                <div style="display: flex; gap: 10px; align-items: flex-start;">
+                    <textarea name="lokasi" id="lokasi" rows="2" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">{{ old('lokasi', $surat->lokasi) }}</textarea>
+                    <button type="button" onclick="cariLokasiPeta(event)" style="background: #1F6F5F; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; height: fit-content;">Cari di Peta</button>
+                </div>
+                <small style="color: #6b7280; display: block; margin-top: 5px;">Ketik nama jalan (tanpa RT/RW) lalu klik "Cari di Peta" agar titik koordinat otomatis pindah.</small>
             </div>
             
             <div style="margin-bottom: 20px;">
@@ -87,16 +106,38 @@
                 </div>
                 <div>
                     <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Status Pengajuan</label>
-                    <select name="status" required style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-weight: 600; color: #1d4ed8;">
-                        <option value="Diajukan" {{ $surat->status == 'Diajukan' ? 'selected' : '' }}>Diajukan</option>
-                        <option value="Diterima" {{ $surat->status == 'Diterima' ? 'selected' : '' }}>Diterima</option>
-                        <option value="Diproses" {{ $surat->status == 'Diproses' ? 'selected' : '' }}>Diproses</option>
-                        <option value="Disetujui" {{ $surat->status == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
-                        <option value="Selesai" {{ $surat->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
-                        <option value="Ditolak" {{ $surat->status == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
+                    <select name="status" required style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                        <option value="Menunggu" {{ old('status', $surat->status) == 'Menunggu' ? 'selected' : '' }}>Menunggu (Belum Diproses)</option>
+                        <option value="Diajukan" {{ old('status', $surat->status) == 'Diajukan' ? 'selected' : '' }}>Diajukan</option>
+                        <option value="Diterima" {{ old('status', $surat->status) == 'Diterima' ? 'selected' : '' }}>Diterima</option>
+                        <option value="Diproses" {{ old('status', $surat->status) == 'Diproses' ? 'selected' : '' }}>Diproses (Pekerjaan SDA)</option>
+                        <option value="Disetujui" {{ old('status', $surat->status) == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
+                        <option value="Ditolak" {{ old('status', $surat->status) == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
+                        <option value="Selesai" {{ old('status', $surat->status) == 'Selesai' ? 'selected' : '' }}>Selesai</option>
                     </select>
                 </div>
             </div>
+            
+            @if($surat->photo)
+                @php $fotos = json_decode($surat->photo, true) ?? []; @endphp
+                @if(count($fotos) > 0)
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Foto Saat Ini</label>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        @foreach($fotos as $index => $foto)
+                            <div style="position: relative; width: 120px;">
+                                <img src="{{ asset('storage/' . $foto) }}" style="width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid #d1d5db;">
+                                <div style="margin-top: 5px; text-align: center;">
+                                    <label style="font-size: 12px; color: #dc2626; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                                        <input type="checkbox" name="hapus_foto[]" value="{{ $index }}"> Hapus
+                                    </label>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+            @endif
             
             <div style="margin-bottom: 30px;">
                 <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Upload Foto Tambahan (Bisa lebih dari 1)</label>
@@ -104,7 +145,12 @@
             </div>
 
             <div style="text-align: right;">
-                <button type="submit" class="btn btn-primary" style="padding: 12px 24px; font-size: 16px;">Update Surat Permohonan</button>
+                @if(request('auto_proses'))
+                    <input type="hidden" name="auto_proses" value="1">
+                    <button type="submit" class="btn btn-primary" style="padding: 12px 24px; font-size: 16px; background: #10b981; border-color: #10b981;">Simpan & Lanjutkan Proses Pekerjaan SDA</button>
+                @else
+                    <button type="submit" class="btn btn-primary" style="padding: 12px 24px; font-size: 16px;">Update Surat Permohonan</button>
+                @endif
             </div>
         </form>
     </div>
@@ -138,5 +184,95 @@
             }
         }
     };
+
+    // Fix Leaflet default icon path
+    delete L.Icon.Default.prototype._getIconUrl;
+    L.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+    });
+
+    // Leaflet Map Logic
+    var initialLat = document.getElementById('latitude').value || -6.121435;
+    var initialLng = document.getElementById('longitude').value || 106.774124;
+    var map = L.map('map').setView([initialLat, initialLng], 13);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    var marker = L.marker([initialLat, initialLng], {draggable: true});
+    
+    if(document.getElementById('latitude').value) {
+        marker.addTo(map);
+    }
+
+    function updateInputs(lat, lng) {
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lng;
+    }
+
+    map.on('click', function(e) {
+        var lat = e.latlng.lat;
+        var lng = e.latlng.lng;
+        if(!map.hasLayer(marker)){
+            marker.addTo(map);
+        }
+        marker.setLatLng([lat, lng]);
+        updateInputs(lat, lng);
+    });
+
+    marker.on('dragend', function(e) {
+        var lat = marker.getLatLng().lat;
+        var lng = marker.getLatLng().lng;
+        updateInputs(lat, lng);
+    });
+
+    window.cariLokasiPeta = function(event) {
+        let kec = document.getElementById('select_kecamatan');
+        let kel = document.getElementById('select_kelurahan');
+        let kecText = kec.options[kec.selectedIndex] && kec.value ? kec.options[kec.selectedIndex].text : '';
+        let kelText = kel.options[kel.selectedIndex] && kel.value ? kel.options[kel.selectedIndex].text : '';
+        let jalan = document.getElementById('lokasi').value;
+
+        // Clean up RT/RW to get better geocoding results
+        let cleanJalan = jalan.replace(/rt[\s\.\-]*\d+/gi, '').replace(/rw[\s\.\-]*\d+/gi, '').trim();
+
+        let queryParts = [];
+        if(cleanJalan) queryParts.push(cleanJalan);
+        if(kelText) queryParts.push(kelText);
+        if(kecText) queryParts.push(kecText);
+        queryParts.push("Jakarta Utara");
+
+        let query = queryParts.join(", ");
+        
+        let btn = event.target;
+        let oldText = btn.innerText;
+        btn.innerText = "Mencari...";
+        btn.disabled = true;
+
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+            .then(res => res.json())
+            .then(data => {
+                btn.innerText = oldText;
+                btn.disabled = false;
+                if(data && data.length > 0) {
+                    let lat = parseFloat(data[0].lat);
+                    let lon = parseFloat(data[0].lon);
+                    map.setView([lat, lon], 17);
+                    if(!map.hasLayer(marker)) marker.addTo(map);
+                    marker.setLatLng([lat, lon]);
+                    updateInputs(lat, lon);
+                } else {
+                    alert('Lokasi tidak ditemukan oleh sistem peta. \n\nCobalah untuk:\n1. Hapus RT/RW atau nomor rumah pada kolom lokasi\n2. Cukup ketik nama jalan utama\n3. Atau geser pin manual pada peta');
+                }
+            }).catch(e => {
+                btn.innerText = oldText;
+                btn.disabled = false;
+                alert('Gagal menghubungi server pencarian peta.');
+            });
+    }
 </script>
 @endsection
