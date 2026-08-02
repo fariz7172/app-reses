@@ -11,6 +11,18 @@ use App\Http\Controllers\Admin\FraksiController;
 use App\Http\Controllers\Admin\PelaksanaController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\UserController;
+use Illuminate\Support\Facades\Artisan;
+
+// Setup Route (Hanya untuk dijalankan sekali di server)
+Route::get('/setup-server-data', function () {
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        Artisan::call('db:seed', ['--class' => 'RoleUserSeeder', '--force' => true]);
+        return "Berhasil! Kolom Role dan 9 Akun (superadmin, sudin, kecamatan, dll) telah ditambahkan ke database Server.";
+    } catch (\Exception $e) {
+        return "Gagal: " . $e->getMessage();
+    }
+});
 
 /*
 |--------------------------------------------------------------------------
