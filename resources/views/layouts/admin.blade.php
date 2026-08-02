@@ -451,6 +451,14 @@
         /* ==========================================
            GRID UTILITIES
         ========================================== */
+        .grid-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        @media (max-width: 1023px) { .grid-3col { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 639px)  { .grid-3col { grid-template-columns: 1fr; } }
+
         .grid-4col {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
