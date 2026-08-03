@@ -45,10 +45,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('survei-reses/export-excel', [SurveiResesController::class, 'exportExcel'])->name('survei-reses.export-excel');
     Route::resource('survei-reses', SurveiResesController::class);
     Route::get('pekerjaan-sda/map', [PekerjaanSdaController::class, 'mapView'])->name('pekerjaan-sda.map');
     Route::get('pekerjaan-sda/{id}/cetak-bast', [PekerjaanSdaController::class, 'cetakBast'])->name('pekerjaan-sda.cetak-bast');
     Route::resource('pekerjaan-sda', PekerjaanSdaController::class);
+    Route::get('surat-permohonan/export-excel', [SuratPermohonanController::class, 'exportExcel'])->name('surat-permohonan.export-excel');
     Route::post('surat-permohonan/import-earsip', [SuratPermohonanController::class, 'importEarsip'])->name('surat-permohonan.import-earsip');
     Route::post('surat-permohonan/{id}/proses', [SuratPermohonanController::class, 'prosesPekerjaan'])->name('surat-permohonan.proses');
     Route::resource('surat-permohonan', SuratPermohonanController::class);

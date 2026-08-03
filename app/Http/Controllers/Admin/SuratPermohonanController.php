@@ -33,6 +33,29 @@ class SuratPermohonanController extends Controller
         return view('admin.surat-permohonan.index', compact('surat'));
     }
 
+    public function exportExcel(Request $request)
+    {
+        $query = SuratPermohonan::with(['pekerjaanSda', 'kecamatan', 'kelurahan']);
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where('dari', 'like', "%{$search}%")
+                  ->orWhere('deskripsi', 'like', "%{$search}%")
+                  ->orWhere('nomor_surat', 'like', "%{$search}%");
+        }
+        $kecamatanId = $this->getKecamatanId();
+        if ($kecamatanId) {
+            $query->where('id_kecamatan', $kecamatanId);
+        }
+
+        $surat = $query->latest()->get(); // Ambil semua data tanpa pagination
+        
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\SuratPermohonanExport($surat), 
+            'Data_Surat_Usulan_' . date('Ymd_His') . '.xlsx'
+        );
+    }
+
     public function create(Request $request)
     {
         $pekerjaan_id = $request->query('pekerjaan_id');
