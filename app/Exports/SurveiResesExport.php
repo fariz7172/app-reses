@@ -39,8 +39,7 @@ class SurveiResesExport implements FromView, WithColumnWidths, WithStyles
             'G' => 45,  // Permintaan/Keluhan
             'H' => 25,  // Keterangan
             'I' => 20,  // Volume
-            'J' => 20,  // Estimasi Biaya
-            'K' => 15,  // Status
+            'J' => 15,  // Status
         ];
     }
 
@@ -50,7 +49,7 @@ class SurveiResesExport implements FromView, WithColumnWidths, WithStyles
         $highestRow = $sheet->getHighestRow();
         
         // 1. Style untuk header tabel besar
-        $sheet->getStyle('A1:K2')->applyFromArray([
+        $sheet->getStyle('A1:J2')->applyFromArray([
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
                 'vertical' => Alignment::VERTICAL_CENTER,
@@ -58,7 +57,7 @@ class SurveiResesExport implements FromView, WithColumnWidths, WithStyles
         ]);
 
         // 2. Style border luar dan dalam untuk seluruh data tabel
-        $sheet->getStyle('A3:K' . $highestRow)->applyFromArray([
+        $sheet->getStyle('A3:J' . $highestRow)->applyFromArray([
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
