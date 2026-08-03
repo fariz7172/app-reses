@@ -47,6 +47,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     Route::get('survei-reses/export-excel', [SurveiResesController::class, 'exportExcel'])->name('survei-reses.export-excel');
     Route::resource('survei-reses', SurveiResesController::class);
+    Route::get('pekerjaan-sda/export-excel', [PekerjaanSdaController::class, 'exportExcel'])->name('pekerjaan-sda.export-excel');
     Route::get('pekerjaan-sda/map', [PekerjaanSdaController::class, 'mapView'])->name('pekerjaan-sda.map');
     Route::get('pekerjaan-sda/{id}/cetak-bast', [PekerjaanSdaController::class, 'cetakBast'])->name('pekerjaan-sda.cetak-bast');
     Route::resource('pekerjaan-sda', PekerjaanSdaController::class);

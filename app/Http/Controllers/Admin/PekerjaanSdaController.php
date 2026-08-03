@@ -28,6 +28,30 @@ class PekerjaanSdaController extends Controller
         return view('admin.pekerjaan-sda.index', compact('pekerjaan'));
     }
 
+    public function exportExcel(Request $request)
+    {
+        $query = PekerjaanSda::with(['dewan', 'kecamatan', 'kelurahan', 'suratPermohonan'])->latest();
+        
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where('deskripsi', 'like', "%{$search}%")
+                  ->orWhere('no_skpd', 'like', "%{$search}%")
+                  ->orWhere('alamat', 'like', "%{$search}%");
+        }
+
+        $kecamatanId = $this->getKecamatanId();
+        if ($kecamatanId) {
+            $query->where('id_kecamatan', $kecamatanId);
+        }
+
+        $pekerjaan = $query->get();
+        
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\PekerjaanSdaExport($pekerjaan), 
+            'Data_Pekerjaan_SDA_' . date('Ymd_His') . '.xlsx'
+        );
+    }
+
     public function create(Request $request)
     {
         $survei_id = $request->query('survei_id');
