@@ -24,6 +24,26 @@ class SurveiResesController extends Controller
     }
 
     /**
+     * Export data to Excel
+     */
+    public function exportExcel()
+    {
+        $query = \App\Models\SurveiReses::with(['dewan', 'kecamatan', 'kelurahan'])->latest();
+        
+        $kecamatanId = $this->getKecamatanId();
+        if ($kecamatanId) {
+            $query->where('id_kecamatan', $kecamatanId);
+        }
+
+        $survei = $query->get();
+        
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\SurveiResesExport($survei), 
+            'Data_Survei_Reses_' . date('Ymd_His') . '.xlsx'
+        );
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
