@@ -114,8 +114,8 @@
             </tbody>
         </table>
         
-        <div style="margin-top: 20px;">
-            {{ $surat->links() }}
+        <div style="margin-top: 20px; overflow-x: auto; padding-bottom: 10px;">
+            {{ $surat->appends(request()->except('page'))->links('pagination::bootstrap-4') }}
         </div>
     </div>
 </div>
