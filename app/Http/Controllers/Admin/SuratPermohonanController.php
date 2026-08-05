@@ -32,7 +32,7 @@ class SuratPermohonanController extends Controller
             $query->where('id_kecamatan', $kecamatanId);
         }
 
-        $surat = $query->latest()->paginate(10);
+        $surat = $query->orderBy('tanggal', 'desc')->paginate(10);
         return view('admin.surat-permohonan.index', compact('surat'));
     }
 
