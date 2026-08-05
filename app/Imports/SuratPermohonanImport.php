@@ -64,6 +64,16 @@ class SuratPermohonanImport implements ToCollection, WithHeadingRow
                 }
             }
 
+            // Determine status
+            $statusExcel = trim($row['status'] ?? '');
+            $statusLower = strtolower($statusExcel);
+            if (empty($statusLower) || $statusLower === 'survey' || $statusLower === 'proses') {
+                $status = 'Menunggu';
+            } else {
+                // If it's something else like Selesai, keep it or capitalize properly
+                $status = ucfirst($statusLower);
+            }
+
             SuratPermohonan::updateOrCreate(
                 [
                     'nomor_surat' => $row['nomor_surat'],
@@ -78,7 +88,7 @@ class SuratPermohonanImport implements ToCollection, WithHeadingRow
                     'deskripsi' => $row['detail_permohonan'] ?? null,
                     'hasil_survei' => $row['hasil_survei'] ?? null,
                     'photo' => $row['foto'] ?? null,
-                    'status' => $row['status'] ?? 'Survey',
+                    'status' => $status,
                     'catatan' => $row['catatan'] ?? null,
                 ]
             );
