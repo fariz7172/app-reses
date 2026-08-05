@@ -64,7 +64,7 @@
                 @forelse($surat as $item)
                 <tr style="border-bottom: 1px solid #e5e7eb; vertical-align: top;">
                     <td style="padding: 12px; color: #111827; font-weight: 600;">{{ $item->nomor_surat }}</td>
-                    <td style="padding: 12px; color: #374151;">{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
+                    <td style="padding: 12px; color: #374151;">{{ $item->tanggal ? \Carbon\Carbon::parse($item->tanggal)->format('d M Y') : '-' }}</td>
                     <td style="padding: 12px; color: #374151;">{{ $item->dari }}</td>
                     <td style="padding: 12px; color: #374151;">
                         @if($item->id_pekerjaan_sda)
