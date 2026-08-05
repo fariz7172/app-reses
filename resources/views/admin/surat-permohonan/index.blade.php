@@ -14,6 +14,10 @@
                     Tarik Data e-Arsip
                 </button>
             </form>
+            <button type="button" onclick="document.getElementById('importModal').style.display='flex'" class="btn btn-primary" style="background: #107c41; color: white; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>
+                Impor Excel
+            </button>
             <a href="{{ route('admin.surat-permohonan.export-excel') }}" class="btn btn-primary" style="background: #107c41; color: white; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 6px;">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
                 Ekspor Excel
@@ -135,6 +139,24 @@
             <button onclick="document.getElementById('modalIncomplete').style.display='none'" style="padding:10px 16px; border:1px solid #d1d5db; background:white; color:#374151; border-radius:8px; cursor:pointer; font-weight:600;">Batal</button>
             <a id="btnLengkapiData" href="#" style="background:#1591DC; color:white; padding:10px 16px; border-radius:8px; text-decoration:none; font-weight:600;">Lengkapi Data (Edit)</a>
         </div>
+    </div>
+</div>
+
+<!-- Modal Import Excel -->
+<div id="importModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; justify-content: center; align-items: center;">
+    <div style="background: white; padding: 24px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 18px; color: #1e293b;">Impor Data Excel</h3>
+        <form action="{{ route('admin.surat-permohonan.import-excel') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #475569;">Pilih File Excel (.xlsx, .xls)</label>
+                <input type="file" name="file_excel" accept=".xlsx, .xls" required style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;">
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" onclick="document.getElementById('importModal').style.display='none'" style="padding: 8px 16px; background: #e2e8f0; color: #475569; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Batal</button>
+                <button type="submit" style="padding: 8px 16px; background: #107c41; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Impor Data</button>
+            </div>
+        </form>
     </div>
 </div>
 

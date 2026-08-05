@@ -8,9 +8,12 @@ use App\Models\SuratPermohonan;
 use App\Models\PekerjaanSda;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
+use App\Exports\SuratPermohonanExport;
+use App\Imports\SuratPermohonanImport;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SuratPermohonanController extends Controller
 {
@@ -293,6 +296,20 @@ class SuratPermohonanController extends Controller
             return redirect()->route('admin.surat-permohonan.index')->with('success', "Berhasil menarik dan menyimpan $count data usulan baru dari e-Arsip!");
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['Terjadi kesalahan koneksi ke server e-Arsip: ' . $e->getMessage()]);
+        }
+    }
+
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls'
+        ]);
+
+        try {
+            Excel::import(new SuratPermohonanImport, $request->file('file_excel'));
+            return redirect()->route('admin.surat-permohonan.index')->with('success', 'Data berhasil diimpor!');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Gagal mengimpor data: ' . $e->getMessage()]);
         }
     }
 

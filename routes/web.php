@@ -52,6 +52,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('pekerjaan-sda/{id}/cetak-bast', [PekerjaanSdaController::class, 'cetakBast'])->name('pekerjaan-sda.cetak-bast');
     Route::resource('pekerjaan-sda', PekerjaanSdaController::class);
     Route::get('surat-permohonan/export-excel', [SuratPermohonanController::class, 'exportExcel'])->name('surat-permohonan.export-excel');
+    Route::post('surat-permohonan/import-excel', [SuratPermohonanController::class, 'importExcel'])->name('surat-permohonan.import-excel');
     Route::post('surat-permohonan/import-earsip', [SuratPermohonanController::class, 'importEarsip'])->name('surat-permohonan.import-earsip');
     Route::post('surat-permohonan/{id}/proses', [SuratPermohonanController::class, 'prosesPekerjaan'])->name('surat-permohonan.proses');
     Route::resource('surat-permohonan', SuratPermohonanController::class);
