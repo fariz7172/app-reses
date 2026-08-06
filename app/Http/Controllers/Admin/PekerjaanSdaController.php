@@ -336,6 +336,10 @@ class PekerjaanSdaController extends Controller
             }
         }
 
+        if ($request->has('redirect_to') && $request->redirect_to) {
+            return redirect($request->redirect_to)->with('success', 'Data Pekerjaan SDA berhasil diperbarui!');
+        }
+
         return redirect()->route('admin.pekerjaan-sda.index')->with('success', 'Data Pekerjaan SDA berhasil diperbarui!');
     }
 

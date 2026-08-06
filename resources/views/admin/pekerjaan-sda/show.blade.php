@@ -7,7 +7,13 @@
 <div class="content-card">
     <div class="content-card-header">
         <h2 class="content-card-title">Detail Pekerjaan SDA</h2>
-        <a href="{{ route('admin.pekerjaan-sda.index') }}" class="btn btn-ghost">Kembali ke Daftar</a>
+        @php
+            $backUrl = url()->previous();
+            if($backUrl == url()->current()) {
+                $backUrl = route('admin.pekerjaan-sda.index');
+            }
+        @endphp
+        <a href="{{ $backUrl }}" class="btn btn-ghost">Kembali ke Daftar</a>
     </div>
 
     <div style="padding: 24px; font-size: 14px; color: #374151;">

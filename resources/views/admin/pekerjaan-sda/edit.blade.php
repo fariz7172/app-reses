@@ -8,7 +8,13 @@
 <div class="content-card">
     <div class="content-card-header">
         <h2 class="content-card-title">Edit Pekerjaan SDA</h2>
-        <a href="{{ route('admin.pekerjaan-sda.index') }}" class="btn btn-ghost">Batal & Kembali</a>
+        @php
+            $backUrl = url()->previous();
+            if($backUrl == url()->current()) {
+                $backUrl = route('admin.pekerjaan-sda.index');
+            }
+        @endphp
+        <a href="{{ $backUrl }}" class="btn btn-ghost">Batal & Kembali</a>
     </div>
 
     <div style="padding: 24px;">
@@ -26,6 +32,8 @@
         <form action="{{ route('admin.pekerjaan-sda.update', $pekerjaan->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
+            
+            <input type="hidden" name="redirect_to" value="{{ $backUrl }}">
             
             <h3 style="font-size: 16px; font-weight: 700; color: #1F6F5F; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb;">A. Informasi Sumber & Tracking</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
