@@ -104,8 +104,8 @@
             </tbody>
         </table>
 
-        <div style="margin-top: 20px;">
-            {{ $pekerjaan->appends(request()->query())->links('pagination::bootstrap-5') }}
+        <div style="margin-top: 20px; overflow-x: auto; padding-bottom: 10px;">
+            {{ $pekerjaan->appends(request()->query())->links('pagination::bootstrap-4') }}
         </div>
     </div>
 </div>
