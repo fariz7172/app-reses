@@ -912,7 +912,7 @@
             {{-- FOOTER --}}
             <footer class="page-footer">
                 <span>© {{ date('Y') }} {{ config('app.name', 'AdminPanel') }}. Semua hak cipta dilindungi.</span>
-                <span>Dibuat dengan ❤️ Laravel &amp; Tailwind CSS</span>
+                <span>Dibuat dengan ❤️ Sudin SDA &amp; Tata Usaha</span>
             </footer>
 
         </div>{{-- /main-content --}}
