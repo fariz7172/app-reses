@@ -74,24 +74,26 @@ class SuratPermohonanImport implements ToCollection, WithHeadingRow
                 $status = ucfirst($statusLower);
             }
 
-            SuratPermohonan::updateOrCreate(
-                [
-                    'nomor_surat' => $row['nomor_surat'],
-                ],
-                [
-                    'tanggal' => $tanggal,
-                    'dari' => $row['dari_camat_lurah_ketua_rtrw'] ?? ($row['dari'] ?? null),
-                    'id_kecamatan' => $id_kecamatan,
-                    'id_kelurahan' => $id_kelurahan,
-                    'lokasi' => $row['lokasi'] ?? null,
-                    'detail_pemohon' => $row['pengerukanpengurasanperbaikan_saluranpermintaan_u_ditchlainnya'] ?? ($row['deskripsi'] ?? null),
-                    'deskripsi' => $row['detail_permohonan'] ?? null,
-                    'hasil_survei' => $row['hasil_survei'] ?? null,
-                    'photo' => $row['foto'] ?? null,
-                    'status' => $status,
-                    'catatan' => $row['catatan'] ?? null,
-                ]
-            );
+            // Skip jika nomor_surat sudah ada di database agar tidak menimpa data yang sedang diproses
+            $exists = SuratPermohonan::where('nomor_surat', $row['nomor_surat'])->exists();
+            if ($exists) {
+                continue;
+            }
+
+            SuratPermohonan::create([
+                'nomor_surat' => $row['nomor_surat'],
+                'tanggal' => $tanggal,
+                'dari' => $row['dari_camat_lurah_ketua_rtrw'] ?? ($row['dari'] ?? null),
+                'id_kecamatan' => $id_kecamatan,
+                'id_kelurahan' => $id_kelurahan,
+                'lokasi' => $row['lokasi'] ?? null,
+                'detail_pemohon' => $row['pengerukanpengurasanperbaikan_saluranpermintaan_u_ditchlainnya'] ?? ($row['deskripsi'] ?? null),
+                'deskripsi' => $row['detail_permohonan'] ?? null,
+                'hasil_survei' => $row['hasil_survei'] ?? null,
+                'photo' => $row['foto'] ?? null,
+                'status' => $status,
+                'catatan' => $row['catatan'] ?? null,
+            ]);
         }
     }
 }

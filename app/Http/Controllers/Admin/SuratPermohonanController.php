@@ -275,11 +275,12 @@ class SuratPermohonanController extends Controller
                 $asalSurat = $item['asal_surat'] ?? 'Tanpa Pengirim';
                 $perihal = $item['perihal'] ?? '-';
 
-                // Cek agar tidak duplikat
-                $exists = SuratPermohonan::where('nomor_surat', $noSurat)
-                    ->where('dari', $asalSurat)
-                    ->where('deskripsi', $perihal)
-                    ->exists();
+                // Cek agar tidak duplikat (skip jika nomor_surat sudah ada)
+                if (empty($noSurat)) {
+                    continue; // Jika nomor surat kosong, lewati
+                }
+
+                $exists = SuratPermohonan::where('nomor_surat', $noSurat)->exists();
 
                 if (!$exists) {
                     SuratPermohonan::create([
