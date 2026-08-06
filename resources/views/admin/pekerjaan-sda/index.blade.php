@@ -103,6 +103,10 @@
                 @endforelse
             </tbody>
         </table>
+
+        <div style="margin-top: 20px;">
+            {{ $pekerjaan->appends(request()->query())->links('pagination::bootstrap-5') }}
+        </div>
     </div>
 </div>
 @endsection

@@ -24,7 +24,7 @@ class PekerjaanSdaController extends Controller
             $query->where('id_kecamatan', $kecamatanId);
         }
 
-        $pekerjaan = $query->get();
+        $pekerjaan = $query->paginate(10);
         return view('admin.pekerjaan-sda.index', compact('pekerjaan'));
     }
 
