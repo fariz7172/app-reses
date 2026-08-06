@@ -316,7 +316,8 @@ class PekerjaanSdaController extends Controller
     public function mapView()
     {
         $pekerjaan = PekerjaanSda::whereNotNull('latitude')->whereNotNull('longitude')->get();
-        return view('admin.pekerjaan-sda.map', compact('pekerjaan'));
+        $kecamatans = Kecamatan::all();
+        return view('admin.pekerjaan-sda.map', compact('pekerjaan', 'kecamatans'));
     }
 
     public function destroy(string $id)

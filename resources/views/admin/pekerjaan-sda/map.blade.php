@@ -69,10 +69,19 @@
 @endpush
 
 @section('content')
-<div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+<div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
     <div>
         <h2 style="font-size: 18px; font-weight: 700; color: #1F6F5F; margin: 0;">Peta Sebaran Pekerjaan SDA</h2>
-        <p style="font-size: 13px; color: #6b7280; margin: 4px 0 0;">Menampilkan {{ $pekerjaan->count() }} titik pekerjaan yang memiliki data koordinat valid.</p>
+        <p style="font-size: 13px; color: #6b7280; margin: 4px 0 0;">Menampilkan <span id="marker-count">{{ $pekerjaan->count() }}</span> titik pekerjaan yang memiliki data koordinat valid.</p>
+    </div>
+    
+    <div>
+        <select id="filter-kecamatan" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; cursor: pointer; color: #374151;">
+            <option value="">-- Semua Kecamatan --</option>
+            @foreach($kecamatans as $kec)
+                <option value="{{ $kec->id }}">{{ $kec->nama_kecamatan }}</option>
+            @endforeach
+        </select>
     </div>
 </div>
 
@@ -94,8 +103,11 @@
     // Ambil data pekerjaan dari PHP ke JS
     const pekerjaanData = @json($pekerjaan);
     
-    // Group marker untuk auto-zoom bounds
-    const markers = [];
+    // Layer group untuk marker
+    const markerGroup = L.layerGroup().addTo(map);
+    
+    // Array untuk menampung referensi semua marker
+    const allMarkers = [];
 
     // Definisikan Custom Icon untuk Progress 100% (Warna Hijau)
     const greenIcon = new L.Icon({
@@ -107,54 +119,105 @@
         shadowSize: [41, 41]
     });
 
-    pekerjaanData.forEach(item => {
-        let lat = parseFloat(item.latitude);
-        let lng = parseFloat(item.longitude);
+    function renderMarkers() {
+        markerGroup.clearLayers();
+        allMarkers.length = 0;
+        
+        let selectedKecamatan = document.getElementById('filter-kecamatan').value;
+        let bounds = [];
+        let count = 0;
 
-        if (!isNaN(lat) && !isNaN(lng)) {
-            // Setup Progress Color (Hijau jika 100%, Biru jika sedang berjalan, Kuning jika 0%)
-            let progressColor = '#059669';
-            if(item.progress == 0) progressColor = '#d97706';
-            else if(item.progress < 100) progressColor = '#2563eb';
-
-            // Limit deskripsi untuk popup
-            let deskripsi = item.deskripsi ? item.deskripsi : 'Tidak ada nama pekerjaan';
-            if (deskripsi.length > 50) deskripsi = deskripsi.substring(0, 50) + '...';
-
-            let alamat = item.alamat ? item.alamat : 'Alamat tidak diketahui';
-            if (alamat.length > 40) alamat = alamat.substring(0, 40) + '...';
-
-            // Buat HTML Content untuk Popup
-            let popupHtml = `
-                <div class="popup-content">
-                    <div class="popup-title">${deskripsi}</div>
-                    <div class="popup-info"><strong>Lokasi:</strong> ${alamat}</div>
-                    <div class="popup-info"><strong>Progress:</strong> ${item.progress || 0}%</div>
-                    
-                    <div class="popup-progress-container">
-                        <div class="popup-progress-bar" style="width: ${item.progress || 0}%; background-color: ${progressColor}"></div>
-                    </div>
-
-                    <a href="/admin/pekerjaan-sda/${item.id}" class="popup-btn">Lihat Detail Pekerjaan</a>
-                </div>
-            `;
-
-            let markerOptions = {};
-            if (item.progress == 100) {
-                markerOptions.icon = greenIcon;
+        pekerjaanData.forEach(item => {
+            // Filter kecamatan
+            if (selectedKecamatan && item.id_kecamatan != selectedKecamatan) {
+                return;
             }
 
-            let marker = L.marker([lat, lng], markerOptions)
-                .addTo(map)
-                .bindPopup(popupHtml);
-            
-            markers.push([lat, lng]);
-        }
-    });
+            let lat = parseFloat(item.latitude);
+            let lng = parseFloat(item.longitude);
 
-    // Sesuaikan zoom peta agar semua marker terlihat (jika ada)
-    if (markers.length > 0) {
-        map.fitBounds(markers, { padding: [30, 30] });
+            if (!isNaN(lat) && !isNaN(lng)) {
+                // Setup Progress Color (Hijau jika 100%, Biru jika sedang berjalan, Kuning jika 0%)
+                let progressColor = '#059669';
+                if(item.progress == 0) progressColor = '#d97706';
+                else if(item.progress < 100) progressColor = '#2563eb';
+
+                // Limit deskripsi untuk popup
+                let deskripsi = item.deskripsi ? item.deskripsi : 'Tidak ada nama pekerjaan';
+                let no_surat = item.no_skpd ? item.no_skpd : '-';
+                if (deskripsi.length > 50) deskripsi = deskripsi.substring(0, 50) + '...';
+
+                let alamat = item.alamat ? item.alamat : 'Alamat tidak diketahui';
+                if (alamat.length > 40) alamat = alamat.substring(0, 40) + '...';
+
+                // Buat HTML Content untuk Popup
+                let popupHtml = `
+                    <div class="popup-content">
+                        <div class="popup-title">${deskripsi}</div>
+                        <div class="popup-info"><strong>No. Surat:</strong> ${no_surat}</div>
+                        <div class="popup-info"><strong>Lokasi:</strong> ${alamat}</div>
+                        <div class="popup-info"><strong>Progress:</strong> ${item.progress || 0}%</div>
+                        
+                        <div class="popup-progress-container">
+                            <div class="popup-progress-bar" style="width: ${item.progress || 0}%; background-color: ${progressColor}"></div>
+                        </div>
+
+                        <a href="/admin/pekerjaan-sda/${item.id}" class="popup-btn">Lihat Detail Pekerjaan</a>
+                    </div>
+                `;
+
+                let markerOptions = {};
+                if (item.progress == 100) {
+                    markerOptions.icon = greenIcon;
+                }
+
+                let marker = L.marker([lat, lng], markerOptions).bindPopup(popupHtml);
+                
+                markerGroup.addLayer(marker);
+                bounds.push([lat, lng]);
+                count++;
+                
+                // Simpan referensi ke array untuk search
+                allMarkers.push({
+                    marker: marker,
+                    no_skpd: item.no_skpd ? item.no_skpd.toLowerCase() : '',
+                    deskripsi: item.deskripsi ? item.deskripsi.toLowerCase() : '',
+                    lat: lat,
+                    lng: lng
+                });
+            }
+        });
+
+        document.getElementById('marker-count').innerText = count;
+
+        if (bounds.length > 0) {
+            map.fitBounds(bounds, { padding: [30, 30] });
+        }
     }
+
+    // Inisialisasi awal
+    renderMarkers();
+
+    // Event listener untuk Filter Kecamatan
+    document.getElementById('filter-kecamatan').addEventListener('change', renderMarkers);
+
+    // Event listener untuk Global Search dari layout admin
+    const globalSearchInput = document.getElementById('global-search');
+    if (globalSearchInput) {
+        globalSearchInput.addEventListener('input', function(e) {
+            let keyword = e.target.value.toLowerCase().trim();
+            if (!keyword) return;
+
+            // Cari marker pertama yang cocok dengan nomor_surat (no_skpd) atau deskripsi
+            let found = allMarkers.find(m => m.no_skpd.includes(keyword) || m.deskripsi.includes(keyword));
+            
+            if (found) {
+                // Zoom ke marker dan buka popupnya
+                map.setView([found.lat, found.lng], 16, { animate: true });
+                found.marker.openPopup();
+            }
+        });
+    }
+
 </script>
 @endsection
