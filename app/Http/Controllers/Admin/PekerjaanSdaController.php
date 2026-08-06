@@ -339,9 +339,22 @@ class PekerjaanSdaController extends Controller
         return redirect()->route('admin.pekerjaan-sda.index')->with('success', 'Data Pekerjaan SDA berhasil diperbarui!');
     }
 
-    public function mapView()
+    public function mapView(Request $request)
     {
-        $pekerjaan = PekerjaanSda::whereNotNull('latitude')->whereNotNull('longitude')->get();
+        $query = PekerjaanSda::with(['dewan', 'kecamatan', 'kelurahan', 'surveiReses'])
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude');
+
+        $kecamatanId = $this->getKecamatanId();
+        if ($kecamatanId) {
+            $query->where('id_kecamatan', $kecamatanId);
+        }
+
+        if ($request->filled('sumber_data')) {
+            $query->where('sumber_data', $request->sumber_data);
+        }
+
+        $pekerjaan = $query->get();
         $kecamatans = Kecamatan::all();
         return view('admin.pekerjaan-sda.map', compact('pekerjaan', 'kecamatans'));
     }

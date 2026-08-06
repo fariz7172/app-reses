@@ -75,7 +75,13 @@
         <p style="font-size: 13px; color: #6b7280; margin: 4px 0 0;">Menampilkan <span id="marker-count">{{ $pekerjaan->count() }}</span> titik pekerjaan yang memiliki data koordinat valid.</p>
     </div>
     
-    <div>
+    <div style="display: flex; gap: 10px;">
+        <select id="filter-sumber-data" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; cursor: pointer; color: #374151;">
+            <option value="">-- Semua Sumber Data --</option>
+            <option value="Masyarakat" {{ request('sumber_data') == 'Masyarakat' ? 'selected' : '' }}>Masyarakat (Usulan)</option>
+            <option value="Reses" {{ request('sumber_data') == 'Reses' ? 'selected' : '' }}>Hasil Reses</option>
+        </select>
+        
         <select id="filter-kecamatan" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; cursor: pointer; color: #374151;">
             <option value="">-- Semua Kecamatan --</option>
             @foreach($kecamatans as $kec)
@@ -134,12 +140,18 @@
         allMarkers.length = 0;
         
         let selectedKecamatan = document.getElementById('filter-kecamatan').value;
+        let selectedSumberData = document.getElementById('filter-sumber-data').value;
         let bounds = [];
         let count = 0;
 
         pekerjaanData.forEach(item => {
             // Filter kecamatan
             if (selectedKecamatan && item.id_kecamatan != selectedKecamatan) {
+                return;
+            }
+
+            // Filter sumber data
+            if (selectedSumberData && item.sumber_data != selectedSumberData) {
                 return;
             }
 
@@ -218,8 +230,9 @@
     // Inisialisasi awal
     renderMarkers();
 
-    // Event listener untuk Filter Kecamatan
+    // Event listener untuk Filter
     document.getElementById('filter-kecamatan').addEventListener('change', renderMarkers);
+    document.getElementById('filter-sumber-data').addEventListener('change', renderMarkers);
 
     // Event listener untuk Global Search dari layout admin
     const globalSearchInput = document.getElementById('global-search');
