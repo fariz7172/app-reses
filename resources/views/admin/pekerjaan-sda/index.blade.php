@@ -60,7 +60,7 @@
             <tbody>
                 @forelse($pekerjaan as $index => $item)
                 <tr style="border-bottom: 1px solid #e5e7eb; vertical-align: top;">
-                    <td style="padding: 12px; color: #374151;">{{ $index + 1 }}</td>
+                    <td style="padding: 12px; color: #374151;">{{ ($pekerjaan->currentPage() - 1) * $pekerjaan->perPage() + $index + 1 }}</td>
                     <td style="padding: 12px; color: #111827;">
                         <span style="font-weight: 600;">{{ $item->sumber_data }}</span><br>
                         @if($item->no_skpd)
