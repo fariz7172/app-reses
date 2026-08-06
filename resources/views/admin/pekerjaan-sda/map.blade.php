@@ -184,6 +184,7 @@
                     <div class="popup-content">
                         <div class="popup-title">${deskripsi}</div>
                         ${dynamicInfoHtml}
+                        <div class="popup-info"><strong>Sumber Data:</strong> ${item.sumber_data || '-'}</div>
                         <div class="popup-info"><strong>Lokasi:</strong> ${alamat}</div>
                         <div class="popup-info"><strong>Progress:</strong> ${item.progress || 0}%</div>
                         
