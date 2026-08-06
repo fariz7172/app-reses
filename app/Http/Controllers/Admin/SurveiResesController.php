@@ -19,7 +19,7 @@ class SurveiResesController extends Controller
             $query->where('id_kecamatan', $kecamatanId);
         }
 
-        $survei = $query->get();
+        $survei = $query->paginate(10);
         return view('admin.survei-reses.index', compact('survei'));
     }
 
@@ -41,6 +41,23 @@ class SurveiResesController extends Controller
             new \App\Exports\SurveiResesExport($survei), 
             'Data_Survei_Reses_' . date('Ymd_His') . '.xlsx'
         );
+    }
+
+    /**
+     * Import data from Excel
+     */
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls'
+        ]);
+
+        try {
+            \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\ResesImport, $request->file('file_excel'));
+            return redirect()->route('admin.survei-reses.index')->with('success', 'Data Reses berhasil diimpor.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.survei-reses.index')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
+        }
     }
 
     /**

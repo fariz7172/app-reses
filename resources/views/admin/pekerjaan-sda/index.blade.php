@@ -17,6 +17,18 @@
     </div>
     
     <div style="padding: 20px; overflow-x: auto;">
+        <form method="GET" action="{{ route('admin.pekerjaan-sda.index') }}" style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center;">
+            <select name="sumber_data" style="padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 13px; min-width: 250px; background: white; color: #374151;">
+                <option value="">Semua Sumber Data</option>
+                <option value="Masyarakat" {{ request('sumber_data') == 'Masyarakat' ? 'selected' : '' }}>Masyarakat (Usulan)</option>
+                <option value="Reses" {{ request('sumber_data') == 'Reses' ? 'selected' : '' }}>Hasil Reses</option>
+            </select>
+            <button type="submit" style="background: #111827; color: white; padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 13px;">Filter</button>
+            @if(request('sumber_data'))
+                <a href="{{ route('admin.pekerjaan-sda.index') }}" style="padding: 10px 16px; border-radius: 8px; border: 1px solid #d1d5db; color: #374151; text-decoration: none; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center;">Reset</a>
+            @endif
+        </form>
+
         @if ($errors->any())
             <div style="background: #fef2f2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
                 <ul style="margin: 0; padding-left: 20px;">
@@ -54,8 +66,11 @@
                         @if($item->no_skpd)
                             <small style="color: #4b5563; font-weight: 600;">Ref: {{ $item->no_skpd }}</small><br>
                         @endif
+                        @if($item->kode_tracking)
+                            <small style="color: #4b5563; font-weight: 600;">Tracking: {{ $item->kode_tracking }}</small><br>
+                        @endif
                         @if($item->id_survei_reses)
-                            <small style="color: #059669; background: #d1fae5; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px;">Terkait Reses #{{ $item->id_survei_reses }}</small>
+                            <small style="color: #059669; background: #d1fae5; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px;">Terkait Reses #{{ $item->surveiReses ? ($item->surveiReses->no_reses ?? $item->id_survei_reses) : $item->id_survei_reses }}</small>
                         @endif
                     </td>
                     <td style="padding: 12px; color: #374151;">

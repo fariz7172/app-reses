@@ -793,12 +793,14 @@
                 </nav>
 
                 {{-- Search --}}
-                <div class="topbar-search">
-                    <svg xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;color:#9ca3af;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
-                    </svg>
-                    <input type="text" placeholder="Cari sesuatu..." id="global-search">
-                </div>
+                <form class="topbar-search" method="GET" action="">
+                    <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;color:#9ca3af;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
+                        </svg>
+                    </button>
+                    <input type="text" name="search" placeholder="Ketik lalu tekan Enter..." id="global-search" value="{{ request('search') }}">
+                </form>
 
                 {{-- Right Actions --}}
                 <div style="display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0;">
@@ -966,15 +968,17 @@
         checkMobile();
         window.addEventListener('resize', checkMobile);
 
-        // ---- Global Search for Tables ----
+        // ---- Global Search for Tables (Live Filter) ----
         const globalSearch = document.getElementById('global-search');
         if (globalSearch) {
-            globalSearch.addEventListener('keyup', function() {
+            globalSearch.addEventListener('keyup', function(e) {
+                // If it's the Enter key, let the form submission handle it natively
+                if (e.key === 'Enter') return;
+
                 let filter = this.value.toLowerCase();
                 let tableRows = document.querySelectorAll('table tbody tr');
                 
                 tableRows.forEach(row => {
-                    // Jangan filter baris yang menandakan 'data kosong'
                     if (row.cells.length === 1 && row.textContent.toLowerCase().includes('belum ada data')) return;
                     
                     let text = row.textContent.toLowerCase();

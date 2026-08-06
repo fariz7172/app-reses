@@ -119,6 +119,16 @@
         shadowSize: [41, 41]
     });
 
+    // Definisikan Custom Icon untuk Hasil Reses (Warna Orange)
+    const orangeIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
     function renderMarkers() {
         markerGroup.clearLayers();
         allMarkers.length = 0;
@@ -150,11 +160,18 @@
                 let alamat = item.alamat ? item.alamat : 'Alamat tidak diketahui';
                 if (alamat.length > 40) alamat = alamat.substring(0, 40) + '...';
 
+                let dynamicInfoHtml = '';
+                if (item.sumber_data === 'Reses') {
+                    dynamicInfoHtml = `<div class="popup-info"><strong>Kode Tracking:</strong> ${item.kode_tracking || '-'}</div>`;
+                } else {
+                    dynamicInfoHtml = `<div class="popup-info"><strong>No. Surat:</strong> ${no_surat}</div>`;
+                }
+
                 // Buat HTML Content untuk Popup
                 let popupHtml = `
                     <div class="popup-content">
                         <div class="popup-title">${deskripsi}</div>
-                        <div class="popup-info"><strong>No. Surat:</strong> ${no_surat}</div>
+                        ${dynamicInfoHtml}
                         <div class="popup-info"><strong>Lokasi:</strong> ${alamat}</div>
                         <div class="popup-info"><strong>Progress:</strong> ${item.progress || 0}%</div>
                         
@@ -167,7 +184,9 @@
                 `;
 
                 let markerOptions = {};
-                if (item.progress == 100) {
+                if (item.sumber_data === 'Reses') {
+                    markerOptions.icon = orangeIcon;
+                } else if (item.progress == 100) {
                     markerOptions.icon = greenIcon;
                 }
 
@@ -182,6 +201,7 @@
                     marker: marker,
                     no_skpd: item.no_skpd ? item.no_skpd.toLowerCase() : '',
                     deskripsi: item.deskripsi ? item.deskripsi.toLowerCase() : '',
+                    kode_tracking: item.kode_tracking ? item.kode_tracking.toLowerCase() : '',
                     lat: lat,
                     lng: lng
                 });
@@ -208,8 +228,8 @@
             let keyword = e.target.value.toLowerCase().trim();
             if (!keyword) return;
 
-            // Cari marker pertama yang cocok dengan nomor_surat (no_skpd) atau deskripsi
-            let found = allMarkers.find(m => m.no_skpd.includes(keyword) || m.deskripsi.includes(keyword));
+            // Cari marker pertama yang cocok dengan nomor_surat (no_skpd), deskripsi, atau kode_tracking
+            let found = allMarkers.find(m => m.no_skpd.includes(keyword) || m.deskripsi.includes(keyword) || m.kode_tracking.includes(keyword));
             
             if (found) {
                 // Zoom ke marker dan buka popupnya

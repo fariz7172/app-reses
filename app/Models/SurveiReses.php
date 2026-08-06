@@ -12,6 +12,7 @@ class SurveiReses extends Model
     protected $table = 'survei_reses';
 
     protected $fillable = [
+        'no_reses',
         'id_dewan',
         'id_kecamatan',
         'id_kelurahan',

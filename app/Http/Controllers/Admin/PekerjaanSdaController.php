@@ -15,13 +15,39 @@ use App\Models\Kelurahan;
 
 class PekerjaanSdaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $query = PekerjaanSda::with(['dewan', 'kecamatan', 'kelurahan', 'suratPermohonan'])->latest();
+        $query = PekerjaanSda::with(['dewan', 'kecamatan', 'kelurahan', 'suratPermohonan', 'surveiReses']);
         
         $kecamatanId = $this->getKecamatanId();
         if ($kecamatanId) {
             $query->where('id_kecamatan', $kecamatanId);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('kode_tracking', 'like', "%{$search}%")
+                  ->orWhere('no_skpd', 'like', "%{$search}%")
+                  ->orWhereHas('surveiReses', function($q2) use ($search) {
+                      $q2->where('no_reses', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->filled('sumber_data')) {
+            $query->where('sumber_data', $request->sumber_data);
+        }
+
+        if ($request->sumber_data === 'Reses') {
+            $query->orderBy(
+                \App\Models\SurveiReses::selectRaw('CAST(no_reses AS UNSIGNED)')
+                    ->whereColumn('survei_reses.id', 'pekerjaan_sdas.id_survei_reses')
+                    ->limit(1),
+                'desc'
+            );
+        } else {
+            $query->latest();
         }
 
         $pekerjaan = $query->paginate(10);
