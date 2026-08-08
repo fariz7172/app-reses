@@ -72,7 +72,7 @@
 <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
     <div>
         <h2 style="font-size: 18px; font-weight: 700; color: #1F6F5F; margin: 0;">Peta Sebaran Pekerjaan SDA</h2>
-        <p style="font-size: 13px; color: #6b7280; margin: 4px 0 0;">Menampilkan <span id="marker-count">{{ $pekerjaan->count() }}</span> titik pekerjaan yang memiliki data koordinat valid.</p>
+        <p style="font-size: 13px; color: #6b7280; margin: 4px 0 0;">Menampilkan <span id="marker-count">{{ $pekerjaan->count() }}</span> titik pekerjaan yang memiliki data koordinat valid (<strong style="color: #059669;"><span id="selesai-count">0</span> Selesai</strong>, <strong style="color: #d97706;"><span id="proses-count">0</span> Proses</strong>).</p>
     </div>
     
     <div style="display: flex; gap: 10px;">
@@ -143,6 +143,8 @@
         let selectedSumberData = document.getElementById('filter-sumber-data').value;
         let bounds = [];
         let count = 0;
+        let countSelesai = 0;
+        let countProses = 0;
 
         pekerjaanData.forEach(item => {
             // Filter kecamatan
@@ -209,6 +211,12 @@
                 bounds.push([lat, lng]);
                 count++;
                 
+                if (item.progress == 100) {
+                    countSelesai++;
+                } else {
+                    countProses++;
+                }
+                
                 // Simpan referensi ke array untuk search
                 allMarkers.push({
                     marker: marker,
@@ -222,6 +230,8 @@
         });
 
         document.getElementById('marker-count').innerText = count;
+        document.getElementById('selesai-count').innerText = countSelesai;
+        document.getElementById('proses-count').innerText = countProses;
 
         if (bounds.length > 0) {
             map.fitBounds(bounds, { padding: [30, 30] });
