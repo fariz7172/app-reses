@@ -197,10 +197,10 @@
                 `;
 
                 let markerOptions = {};
-                if (item.sumber_data === 'Reses') {
-                    markerOptions.icon = orangeIcon;
-                } else if (item.progress == 100) {
+                if (item.progress == 100) {
                     markerOptions.icon = greenIcon;
+                } else if (item.sumber_data === 'Reses') {
+                    markerOptions.icon = orangeIcon;
                 }
 
                 let marker = L.marker([lat, lng], markerOptions).bindPopup(popupHtml);
