@@ -51,6 +51,7 @@ class PekerjaanSdaController extends Controller
         }
 
         $pekerjaan = $query->paginate(10);
+        $pekerjaan->appends($request->all());
         return view('admin.pekerjaan-sda.index', compact('pekerjaan'));
     }
 

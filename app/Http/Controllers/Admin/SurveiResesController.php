@@ -10,7 +10,7 @@ class SurveiResesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $query = \App\Models\SurveiReses::with(['dewan', 'kecamatan', 'kelurahan'])->latest();
         
@@ -19,7 +19,22 @@ class SurveiResesController extends Controller
             $query->where('id_kecamatan', $kecamatanId);
         }
 
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('no_reses', 'like', "%{$search}%")
+                  ->orWhere('keluhan', 'like', "%{$search}%")
+                  ->orWhere('permintaan', 'like', "%{$search}%")
+                  ->orWhere('alamat', 'like', "%{$search}%")
+                  ->orWhereHas('dewan', function($qDewan) use ($search) {
+                      $qDewan->where('nama', 'like', "%{$search}%");
+                  });
+            });
+        }
+
         $survei = $query->paginate(10);
+        $survei->appends($request->all());
+        
         return view('admin.survei-reses.index', compact('survei'));
     }
 
