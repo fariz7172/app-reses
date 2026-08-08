@@ -37,11 +37,7 @@
             
             <select name="status" onchange="this.form.submit()" style="padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 13px; outline: none; cursor: pointer; color: #374151;">
                 <option value="">-- Semua Status --</option>
-                <option value="Menunggu" {{ request('status') == 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
-                <option value="Diajukan" {{ request('status') == 'Diajukan' ? 'selected' : '' }}>Diajukan</option>
-                <option value="Diterima" {{ request('status') == 'Diterima' ? 'selected' : '' }}>Diterima</option>
                 <option value="Diproses" {{ request('status') == 'Diproses' ? 'selected' : '' }}>Diproses (Pekerjaan SDA)</option>
-                <option value="Disetujui" {{ request('status') == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
                 <option value="Ditolak" {{ request('status') == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
                 <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
             </select>
