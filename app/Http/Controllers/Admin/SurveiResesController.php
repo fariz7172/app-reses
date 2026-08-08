@@ -32,6 +32,10 @@ class SurveiResesController extends Controller
             });
         }
 
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
         $survei = $query->paginate(10);
         $survei->appends($request->all());
         
@@ -41,13 +45,30 @@ class SurveiResesController extends Controller
     /**
      * Export data to Excel
      */
-    public function exportExcel()
+    public function exportExcel(Request $request)
     {
         $query = \App\Models\SurveiReses::with(['dewan', 'kecamatan', 'kelurahan'])->latest();
         
         $kecamatanId = $this->getKecamatanId();
         if ($kecamatanId) {
             $query->where('id_kecamatan', $kecamatanId);
+        }
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('no_reses', 'like', "%{$search}%")
+                  ->orWhere('keluhan', 'like', "%{$search}%")
+                  ->orWhere('permintaan', 'like', "%{$search}%")
+                  ->orWhere('alamat', 'like', "%{$search}%")
+                  ->orWhereHas('dewan', function($qDewan) use ($search) {
+                      $qDewan->where('nama', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
 
         $survei = $query->get();
