@@ -39,6 +39,14 @@ class PekerjaanSdaController extends Controller
             $query->where('sumber_data', $request->sumber_data);
         }
 
+        if ($request->filled('progress')) {
+            if ($request->progress == '100') {
+                $query->where('progress', 100);
+            } elseif ($request->progress == '<100') {
+                $query->where('progress', '<', 100);
+            }
+        }
+
         if ($request->sumber_data === 'Reses') {
             $query->orderBy(
                 \App\Models\SurveiReses::selectRaw('CAST(no_reses AS UNSIGNED)')
@@ -69,6 +77,18 @@ class PekerjaanSdaController extends Controller
         $kecamatanId = $this->getKecamatanId();
         if ($kecamatanId) {
             $query->where('id_kecamatan', $kecamatanId);
+        }
+
+        if ($request->filled('sumber_data')) {
+            $query->where('sumber_data', $request->sumber_data);
+        }
+
+        if ($request->filled('progress')) {
+            if ($request->progress == '100') {
+                $query->where('progress', 100);
+            } elseif ($request->progress == '<100') {
+                $query->where('progress', '<', 100);
+            }
         }
 
         $pekerjaan = $query->get();
