@@ -21,18 +21,27 @@ class SuratPermohonanController extends Controller
     {
         $query = SuratPermohonan::with(['pekerjaanSda', 'kecamatan', 'kelurahan']);
 
-        if ($request->has('search')) {
+        if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where('dari', 'like', "%{$search}%")
+            $query->where(function($q) use ($search) {
+                $q->where('dari', 'like', "%{$search}%")
                   ->orWhere('deskripsi', 'like', "%{$search}%")
                   ->orWhere('nomor_surat', 'like', "%{$search}%");
+            });
         }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
         $kecamatanId = $this->getKecamatanId();
         if ($kecamatanId) {
             $query->where('id_kecamatan', $kecamatanId);
         }
 
         $surat = $query->orderBy('tanggal', 'desc')->paginate(10);
+        $surat->appends($request->all());
+        
         return view('admin.surat-permohonan.index', compact('surat'));
     }
 
@@ -40,12 +49,19 @@ class SuratPermohonanController extends Controller
     {
         $query = SuratPermohonan::with(['pekerjaanSda', 'kecamatan', 'kelurahan']);
 
-        if ($request->has('search')) {
+        if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where('dari', 'like', "%{$search}%")
+            $query->where(function($q) use ($search) {
+                $q->where('dari', 'like', "%{$search}%")
                   ->orWhere('deskripsi', 'like', "%{$search}%")
                   ->orWhere('nomor_surat', 'like', "%{$search}%");
+            });
         }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
         $kecamatanId = $this->getKecamatanId();
         if ($kecamatanId) {
             $query->where('id_kecamatan', $kecamatanId);

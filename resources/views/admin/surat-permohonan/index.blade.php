@@ -34,8 +34,20 @@
     <div style="padding: 20px; padding-bottom: 0;">
         <form method="GET" action="{{ route('admin.surat-permohonan.index') }}" style="display: flex; gap: 10px; margin-bottom: 20px;">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nomor surat, pengirim, atau deskripsi..." style="padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; width: 300px; font-size: 13px;">
-            <button type="submit" style="background: #111827; color: white; padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 13px;">Cari</button>
-            @if(request('search'))
+            
+            <select name="status" onchange="this.form.submit()" style="padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 13px; outline: none; cursor: pointer; color: #374151;">
+                <option value="">-- Semua Status --</option>
+                <option value="Menunggu" {{ request('status') == 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
+                <option value="Diajukan" {{ request('status') == 'Diajukan' ? 'selected' : '' }}>Diajukan</option>
+                <option value="Diterima" {{ request('status') == 'Diterima' ? 'selected' : '' }}>Diterima</option>
+                <option value="Diproses" {{ request('status') == 'Diproses' ? 'selected' : '' }}>Diproses (Pekerjaan SDA)</option>
+                <option value="Disetujui" {{ request('status') == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
+                <option value="Ditolak" {{ request('status') == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
+                <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+            </select>
+
+            <button type="submit" style="background: #111827; color: white; padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 13px;">Cari / Filter</button>
+            @if(request('search') || request('status'))
                 <a href="{{ route('admin.surat-permohonan.index') }}" style="padding: 10px 16px; border-radius: 8px; border: 1px solid #d1d5db; color: #374151; text-decoration: none; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center;">Reset</a>
             @endif
         </form>
