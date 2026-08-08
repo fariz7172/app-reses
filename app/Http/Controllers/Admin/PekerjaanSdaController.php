@@ -339,21 +339,33 @@ class PekerjaanSdaController extends Controller
                 $pengirim .= ' (' . $pekerjaan->rincian_sumber_data . ')';
             }
 
-            $pekerjaan->suratPermohonan->update([
+            $updateData = [
                 'nomor_surat' => $pekerjaan->no_skpd,
                 'dari' => $pengirim,
                 'id_kecamatan' => $pekerjaan->id_kecamatan,
                 'id_kelurahan' => $pekerjaan->id_kelurahan,
                 'lokasi' => $pekerjaan->alamat,
                 'deskripsi' => $pekerjaan->deskripsi,
-            ]);
+            ];
+
+            if ($pekerjaan->progress == 100) {
+                $updateData['status'] = 'Selesai';
+            } elseif ($pekerjaan->progress < 100 && $pekerjaan->suratPermohonan->status == 'Selesai') {
+                $updateData['status'] = 'Diproses';
+            }
+
+            $pekerjaan->suratPermohonan->update($updateData);
         }
 
         // Sinkronisasi status selesai ke reses jika progress 100
-        if ($pekerjaan->id_survei_reses && $pekerjaan->progress == 100) {
+        if ($pekerjaan->id_survei_reses) {
             $survei = SurveiReses::find($pekerjaan->id_survei_reses);
             if ($survei) {
-                $survei->update(['status' => 'Selesai']);
+                if ($pekerjaan->progress == 100) {
+                    $survei->update(['status' => 'Selesai']);
+                } elseif ($pekerjaan->progress < 100 && $survei->status == 'Selesai') {
+                    $survei->update(['status' => 'Diproses']);
+                }
             }
         }
 
