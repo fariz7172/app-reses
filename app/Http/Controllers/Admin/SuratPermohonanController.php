@@ -281,15 +281,21 @@ class SuratPermohonanController extends Controller
     {
         try {
             $apiUrl = env('EARSIP_API_URL', 'https://e-arsip.farizahmad.com/api/reses');
-            $response = Http::timeout(10)->get($apiUrl);
+            $apiToken = env('EARSIP_API_TOKEN', ''); // Token bearer untuk akses API e-arsip
+            
+            if (!empty($apiToken)) {
+                $response = Http::withToken($apiToken)->timeout(10)->get($apiUrl);
+            } else {
+                $response = Http::timeout(10)->get($apiUrl);
+            }
 
             if (!$response->successful() || $response->json('status') !== 'success') {
-                return redirect()->back()->withErrors(['Gagal mengambil data dari endpoint e-Arsip (HTTP ' . $response->status() . ').']);
+                return redirect()->back()->with('error', 'Gagal mengambil data dari endpoint e-Arsip (HTTP ' . $response->status() . ').');
             }
 
             $data = $response->json('data');
             if (!is_array($data) || count($data) === 0) {
-                return redirect()->back()->withErrors(['Data dari e-Arsip kosong.']);
+                return redirect()->back()->with('error', 'Data dari e-Arsip kosong.');
             }
 
             $count = 0;
@@ -319,7 +325,7 @@ class SuratPermohonanController extends Controller
 
             return redirect()->route('admin.surat-permohonan.index')->with('success', "Berhasil menarik dan menyimpan $count data usulan baru dari e-Arsip!");
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['Terjadi kesalahan koneksi ke server e-Arsip: ' . $e->getMessage()]);
+            return redirect()->back()->with('error', 'Terjadi kesalahan koneksi ke server e-Arsip: ' . $e->getMessage());
         }
     }
 
