@@ -30,13 +30,25 @@ class VendorController extends Controller
         return redirect()->route('admin.vendor.index')->with('success', 'Data Vendor berhasil ditambahkan.');
     }
 
-    public function edit(Vendor $vendor)
+    public function edit($id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+        $vendor = Vendor::findOrFail($id);
         return view('admin.vendor.edit', compact('vendor'));
     }
 
-    public function update(Request $request, Vendor $vendor)
+    public function update(Request $request, $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+        $vendor = Vendor::findOrFail($id);
         $request->validate([
             'nama' => 'required|string|max:255',
             'jabatan' => 'nullable|string|max:255',
@@ -46,8 +58,14 @@ class VendorController extends Controller
         return redirect()->route('admin.vendor.index')->with('success', 'Data Vendor berhasil diperbarui.');
     }
 
-    public function destroy(Vendor $vendor)
+    public function destroy($id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+        $vendor = Vendor::findOrFail($id);
         $vendor->delete();
         return redirect()->route('admin.vendor.index')->with('success', 'Data Vendor berhasil dihapus.');
     }

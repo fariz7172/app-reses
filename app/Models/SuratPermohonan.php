@@ -53,4 +53,9 @@ class SuratPermohonan extends Model
     {
         return $this->belongsTo(Kelurahan::class, 'id_kelurahan');
     }
+
+    public function getEidAttribute()
+    {
+        return bin2hex(\Illuminate\Support\Facades\Crypt::encryptString($this->id));
+    }
 }

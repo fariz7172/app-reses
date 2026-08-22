@@ -94,9 +94,9 @@
                         </td>
                         <td style="padding: 12px; color: #374151;">{{ $dewan->kecamatan ? $dewan->kecamatan->nama_kecamatan : '-' }}</td>
                         <td style="padding: 12px; color: #374151; display: flex; gap: 8px;">
-                            <a href="{{ route('admin.master.dewan.edit', $dewan->id) }}" style="color: #059669; text-decoration: none; font-weight: 500;">Edit</a>
+                            <a href="{{ route('admin.master.dewan.edit', $dewan->eid) }}" style="color: #059669; text-decoration: none; font-weight: 500;">Edit</a>
                             
-                            <form action="{{ route('admin.master.dewan.destroy', $dewan->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus dewan ini?');" style="display:inline;">
+                            <form action="{{ route('admin.master.dewan.destroy', $dewan->eid) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus dewan ini?');" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" style="color: #dc2626; background: none; border: none; cursor: pointer; font-weight: 500; font-size: 14px; padding: 0;">Hapus</button>

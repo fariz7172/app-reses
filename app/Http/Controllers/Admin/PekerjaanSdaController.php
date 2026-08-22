@@ -197,12 +197,24 @@ class PekerjaanSdaController extends Controller
 
     public function show(string $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $pekerjaan = PekerjaanSda::with(['dewan', 'kecamatan', 'kelurahan', 'surveiReses', 'suratPermohonan', 'pelaksana', 'vendor'])->findOrFail($id);
         return view('admin.pekerjaan-sda.show', compact('pekerjaan'));
     }
 
     public function cetakBast(string $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $pekerjaan = PekerjaanSda::with(['dewan', 'kecamatan', 'kelurahan', 'pelaksana', 'vendor'])->findOrFail($id);
         
         if ($pekerjaan->progress != 100) {
@@ -249,6 +261,12 @@ class PekerjaanSdaController extends Controller
 
     public function edit(string $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $pekerjaan = PekerjaanSda::findOrFail($id);
         
         $kecamatanId = $this->getKecamatanId();
@@ -274,6 +292,12 @@ class PekerjaanSdaController extends Controller
 
     public function update(Request $request, string $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $pekerjaan = PekerjaanSda::findOrFail($id);
         
         $kecamatanId = $this->getKecamatanId();
@@ -399,12 +423,20 @@ class PekerjaanSdaController extends Controller
         }
 
         $pekerjaan = $query->get();
+        $pekerjaan->each->setAppends(['eid']);
+        
         $kecamatans = Kecamatan::all();
         return view('admin.pekerjaan-sda.map', compact('pekerjaan', 'kecamatans'));
     }
 
     public function destroy(string $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $role = strtolower(auth()->user()->role ?? '');
         if (!in_array($role, ['super admin', 'sudin'])) {
             return redirect()->back()->with('error', 'Akses ditolak. Anda tidak memiliki izin untuk menghapus data secara permanen.');

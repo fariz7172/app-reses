@@ -100,11 +100,11 @@
                     <td style="padding: 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                         @if(in_array($item->status, ['Menunggu', 'Diajukan', 'Diterima']) && !$item->id_pekerjaan_sda)
                             @if(empty($item->id_kecamatan) || empty($item->id_kelurahan) || empty($item->lokasi))
-                                <button type="button" onclick="showModalIncomplete({{ $item->id }})" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-right: 4px;">
+                                <button type="button" onclick="showModalIncomplete('{{ $item->eid }}')" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-right: 4px;">
                                     Proses
                                 </button>
                             @else
-                                <form action="{{ route('admin.surat-permohonan.proses', $item->id) }}" method="POST" style="margin:0;">
+                                <form action="{{ route('admin.surat-permohonan.proses', $item->eid) }}" method="POST" style="margin:0;">
                                     @csrf
                                     <button type="submit" onclick="return confirm('Proses usulan/surat ini menjadi Pekerjaan SDA?')" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-right: 4px;">
                                         Proses
@@ -112,9 +112,9 @@
                                 </form>
                             @endif
                         @endif
-                        <a href="{{ route('admin.surat-permohonan.show', $item->id) }}" style="color: #1d4ed8; text-decoration: none; font-weight: 500;">Cetak</a>
-                        <a href="{{ route('admin.surat-permohonan.edit', $item->id) }}" style="color: #059669; text-decoration: none; font-weight: 500;">Edit</a>
-                        <form action="{{ route('admin.surat-permohonan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus surat ini?');" style="display:inline;">
+                        <a href="{{ route('admin.surat-permohonan.show', $item->eid) }}" style="color: #1d4ed8; text-decoration: none; font-weight: 500;">Cetak</a>
+                        <a href="{{ route('admin.surat-permohonan.edit', $item->eid) }}" style="color: #059669; text-decoration: none; font-weight: 500;">Edit</a>
+                        <form action="{{ route('admin.surat-permohonan.destroy', $item->eid) }}" method="POST" onsubmit="return confirm('Yakin hapus surat ini?');" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" style="color: #dc2626; background: none; border: none; cursor: pointer; font-weight: 500; padding: 0;">Hapus</button>

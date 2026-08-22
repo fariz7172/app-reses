@@ -21,4 +21,9 @@ class Dewan extends Model
     {
         return $this->belongsTo(Kecamatan::class, 'id_kecamatan');
     }
+
+    public function getEidAttribute()
+    {
+        return bin2hex(\Illuminate\Support\Facades\Crypt::encryptString($this->id));
+    }
 }

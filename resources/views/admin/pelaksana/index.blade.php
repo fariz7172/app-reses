@@ -35,8 +35,8 @@
                     <td style="padding: 12px; color: #374151;">{{ $item->nip ?? '-' }}</td>
                     <td style="padding: 12px; color: #374151;">{{ $item->jabatan ?? '-' }}</td>
                     <td style="padding: 12px; text-align: center;">
-                        <a href="{{ route('admin.pelaksana.edit', $item->id) }}" style="color: #3b82f6; margin-right: 12px; font-weight: 500; text-decoration: none;">Edit</a>
-                        <form action="{{ route('admin.pelaksana.destroy', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data pelaksana ini?');">
+                        <a href="{{ route('admin.pelaksana.edit', $item->eid) }}" style="color: #3b82f6; margin-right: 12px; font-weight: 500; text-decoration: none;">Edit</a>
+                        <form action="{{ route('admin.pelaksana.destroy', $item->eid) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data pelaksana ini?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" style="color: #ef4444; background: none; border: none; font-weight: 500; cursor: pointer;">Hapus</button>

@@ -189,12 +189,24 @@ class SurveiResesController extends Controller
      */
     public function show(string $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $survei = \App\Models\SurveiReses::with(['dewan', 'kecamatan', 'kelurahan'])->findOrFail($id);
         return view('admin.survei-reses.show', compact('survei'));
     }
 
     public function edit(string $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $survei = \App\Models\SurveiReses::findOrFail($id);
         
         $kecamatanId = $this->getKecamatanId();
@@ -218,6 +230,12 @@ class SurveiResesController extends Controller
 
     public function update(Request $request, string $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $survei = \App\Models\SurveiReses::findOrFail($id);
         
         $kecamatanId = $this->getKecamatanId();
@@ -274,6 +292,12 @@ class SurveiResesController extends Controller
 
     public function destroy(string $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $role = strtolower(auth()->user()->role ?? '');
         if (!in_array($role, ['super admin', 'sudin'])) {
             return redirect()->back()->with('error', 'Akses ditolak. Anda tidak memiliki izin untuk menghapus data secara permanen.');

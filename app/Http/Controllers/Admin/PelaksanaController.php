@@ -31,13 +31,25 @@ class PelaksanaController extends Controller
         return redirect()->route('admin.pelaksana.index')->with('success', 'Data Pelaksana berhasil ditambahkan.');
     }
 
-    public function edit(Pelaksana $pelaksana)
+    public function edit($id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+        $pelaksana = Pelaksana::findOrFail($id);
         return view('admin.pelaksana.edit', compact('pelaksana'));
     }
 
-    public function update(Request $request, Pelaksana $pelaksana)
+    public function update(Request $request, $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+        $pelaksana = Pelaksana::findOrFail($id);
         $request->validate([
             'nama' => 'required|string|max:255',
             'nip' => 'nullable|string|max:255',
@@ -48,8 +60,14 @@ class PelaksanaController extends Controller
         return redirect()->route('admin.pelaksana.index')->with('success', 'Data Pelaksana berhasil diperbarui.');
     }
 
-    public function destroy(Pelaksana $pelaksana)
+    public function destroy($id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+        $pelaksana = Pelaksana::findOrFail($id);
         $pelaksana->delete();
         return redirect()->route('admin.pelaksana.index')->with('success', 'Data Pelaksana berhasil dihapus.');
     }

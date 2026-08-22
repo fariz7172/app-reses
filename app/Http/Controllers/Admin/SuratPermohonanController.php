@@ -144,12 +144,24 @@ class SuratPermohonanController extends Controller
 
     public function show(string $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $surat = SuratPermohonan::with(['pekerjaanSda', 'kecamatan', 'kelurahan'])->findOrFail($id);
         return view('admin.surat-permohonan.show', compact('surat'));
     }
 
     public function edit(string $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $surat = SuratPermohonan::findOrFail($id);
         
         $kecamatanId = $this->getKecamatanId();
@@ -176,6 +188,12 @@ class SuratPermohonanController extends Controller
 
     public function update(Request $request, string $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $surat = SuratPermohonan::findOrFail($id);
         
         $kecamatanId = $this->getKecamatanId();
@@ -246,6 +264,14 @@ class SuratPermohonanController extends Controller
 
     public function prosesPekerjaan($id)
     {
+        if (!is_numeric($id)) {
+            try {
+                $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+            } catch (\Exception $e) {
+                abort(404, 'URL Tidak Valid');
+            }
+        }
+
         $surat = SuratPermohonan::findOrFail($id);
         
         if ($surat->status == 'Diproses' || $surat->id_pekerjaan_sda != null) {
@@ -345,6 +371,12 @@ class SuratPermohonanController extends Controller
 
     public function destroy(string $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $role = strtolower(auth()->user()->role ?? '');
         if (!in_array($role, ['super admin', 'sudin'])) {
             return redirect()->back()->with('error', 'Akses ditolak. Anda tidak memiliki izin untuk menghapus data secara permanen.');

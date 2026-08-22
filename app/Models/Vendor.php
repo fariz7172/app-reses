@@ -11,4 +11,9 @@ class Vendor extends Model
 
     protected $table = 'vendors';
     protected $fillable = ['nama', 'jabatan'];
+
+    public function getEidAttribute()
+    {
+        return bin2hex(\Illuminate\Support\Facades\Crypt::encryptString($this->id));
+    }
 }

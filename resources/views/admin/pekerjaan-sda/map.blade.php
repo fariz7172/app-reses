@@ -194,7 +194,7 @@
                             <div class="popup-progress-bar" style="width: ${item.progress || 0}%; background-color: ${progressColor}"></div>
                         </div>
 
-                        <a href="/admin/pekerjaan-sda/${item.id}" class="popup-btn">Lihat Detail Pekerjaan</a>
+                        <a href="/admin/pekerjaan-sda/${item.eid}" class="popup-btn">Lihat Detail Pekerjaan</a>
                     </div>
                 `;
 

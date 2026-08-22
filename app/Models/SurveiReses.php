@@ -59,4 +59,9 @@ class SurveiReses extends Model
     {
         return $this->hasOne(PekerjaanSda::class, 'id_survei_reses');
     }
+
+    public function getEidAttribute()
+    {
+        return bin2hex(\Illuminate\Support\Facades\Crypt::encryptString($this->id));
+    }
 }

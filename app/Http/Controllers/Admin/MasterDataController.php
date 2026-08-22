@@ -35,6 +35,12 @@ class MasterDataController extends Controller
 
     public function editDewan($id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $dewan = \App\Models\Dewan::findOrFail($id);
         $fraksis = \App\Models\Fraksi::all();
         $kecamatans = \App\Models\Kecamatan::all();
@@ -43,6 +49,12 @@ class MasterDataController extends Controller
 
     public function updateDewan(\Illuminate\Http\Request $request, $id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $dewan = \App\Models\Dewan::findOrFail($id);
         $validated = $request->validate([
             'nama' => 'required|string',
@@ -57,6 +69,12 @@ class MasterDataController extends Controller
 
     public function destroyDewan($id)
     {
+        try {
+            $id = \Illuminate\Support\Facades\Crypt::decryptString(hex2bin($id));
+        } catch (\Exception $e) {
+            abort(404, 'URL Tidak Valid');
+        }
+
         $dewan = \App\Models\Dewan::findOrFail($id);
         $dewan->delete();
         return back()->with('success', 'Data Dewan berhasil dihapus!');

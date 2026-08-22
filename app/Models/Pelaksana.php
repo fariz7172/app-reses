@@ -11,4 +11,9 @@ class Pelaksana extends Model
 
     protected $table = 'pelaksanas';
     protected $fillable = ['nama', 'nip', 'jabatan'];
+
+    public function getEidAttribute()
+    {
+        return bin2hex(\Illuminate\Support\Facades\Crypt::encryptString($this->id));
+    }
 }

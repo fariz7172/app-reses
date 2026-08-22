@@ -90,4 +90,9 @@ class PekerjaanSda extends Model
     {
         return $this->hasOne(SuratPermohonan::class, 'id_pekerjaan_sda');
     }
+
+    public function getEidAttribute()
+    {
+        return bin2hex(\Illuminate\Support\Facades\Crypt::encryptString($this->id));
+    }
 }

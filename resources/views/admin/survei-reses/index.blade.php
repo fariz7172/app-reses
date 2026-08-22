@@ -95,9 +95,9 @@
                         @endif
                     </td>
                     <td style="padding: 12px; color: #374151; display: flex; gap: 8px;">
-                        <a href="{{ route('admin.survei-reses.show', $item->id) }}" style="color: #1d4ed8; text-decoration: none; font-weight: 500; font-size: 13px;">Detail</a>
-                        <a href="{{ route('admin.survei-reses.edit', $item->id) }}" style="color: #059669; text-decoration: none; font-weight: 500; font-size: 13px;">Edit</a>
-                        <form action="{{ route('admin.survei-reses.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?');" style="display:inline;">
+                        <a href="{{ route('admin.survei-reses.show', $item->eid) }}" style="color: #1d4ed8; text-decoration: none; font-weight: 500; font-size: 13px;">Detail</a>
+                        <a href="{{ route('admin.survei-reses.edit', $item->eid) }}" style="color: #059669; text-decoration: none; font-weight: 500; font-size: 13px;">Edit</a>
+                        <form action="{{ route('admin.survei-reses.destroy', $item->eid) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?');" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" style="color: #dc2626; background: none; border: none; cursor: pointer; font-weight: 500; font-size: 13px; padding: 0;">Hapus</button>
