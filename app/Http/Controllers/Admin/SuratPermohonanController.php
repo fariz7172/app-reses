@@ -178,6 +178,13 @@ class SuratPermohonanController extends Controller
     {
         $surat = SuratPermohonan::findOrFail($id);
         
+        $kecamatanId = $this->getKecamatanId();
+        
+        // Proteksi IDOR: Cegah user dari kecamatan lain melakukan update
+        if ($kecamatanId && $surat->id_kecamatan != $kecamatanId) {
+            return redirect()->route('admin.surat-permohonan.index')->with('error', 'Akses ditolak.');
+        }
+
         $validated = $request->validate([
             'tanggal' => 'required|date',
             'nomor_surat' => 'required|string',
@@ -332,7 +339,8 @@ class SuratPermohonanController extends Controller
 
     public function destroy(string $id)
     {
-        if (!in_array(auth()->user()->role, ['Super Admin', 'Sudin'])) {
+        $role = strtolower(auth()->user()->role ?? '');
+        if (!in_array($role, ['super admin', 'sudin'])) {
             return redirect()->back()->with('error', 'Akses ditolak. Anda tidak memiliki izin untuk menghapus data secara permanen.');
         }
 

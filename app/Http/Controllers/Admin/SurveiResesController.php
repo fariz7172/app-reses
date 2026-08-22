@@ -220,6 +220,13 @@ class SurveiResesController extends Controller
     {
         $survei = \App\Models\SurveiReses::findOrFail($id);
         
+        $kecamatanId = $this->getKecamatanId();
+        
+        // Proteksi IDOR: Cegah user dari kecamatan lain melakukan update
+        if ($kecamatanId && $survei->id_kecamatan != $kecamatanId) {
+            return redirect()->route('admin.survei-reses.index')->with('error', 'Akses ditolak.');
+        }
+
         $validated = $request->validate([
             'id_dewan' => 'required|exists:dewans,id',
             'id_kecamatan' => 'required|exists:kecamatans,id',
@@ -267,6 +274,11 @@ class SurveiResesController extends Controller
 
     public function destroy(string $id)
     {
+        $role = strtolower(auth()->user()->role ?? '');
+        if (!in_array($role, ['super admin', 'sudin'])) {
+            return redirect()->back()->with('error', 'Akses ditolak. Anda tidak memiliki izin untuk menghapus data secara permanen.');
+        }
+
         $survei = \App\Models\SurveiReses::findOrFail($id);
         $survei->delete();
         return back()->with('success', 'Data Survei Reses berhasil dihapus!');

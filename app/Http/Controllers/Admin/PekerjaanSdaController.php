@@ -276,6 +276,13 @@ class PekerjaanSdaController extends Controller
     {
         $pekerjaan = PekerjaanSda::findOrFail($id);
         
+        $kecamatanId = $this->getKecamatanId();
+        
+        // Proteksi IDOR: Cegah user dari kecamatan lain melakukan update
+        if ($kecamatanId && $pekerjaan->id_kecamatan != $kecamatanId) {
+            return redirect()->route('admin.pekerjaan-sda.index')->with('error', 'Akses ditolak.');
+        }
+        
         $validated = $request->validate([
             'sumber_data' => 'required|string',
             'no_skpd' => 'nullable|string',
@@ -398,7 +405,8 @@ class PekerjaanSdaController extends Controller
 
     public function destroy(string $id)
     {
-        if (!in_array(auth()->user()->role, ['Super Admin', 'Sudin'])) {
+        $role = strtolower(auth()->user()->role ?? '');
+        if (!in_array($role, ['super admin', 'sudin'])) {
             return redirect()->back()->with('error', 'Akses ditolak. Anda tidak memiliki izin untuk menghapus data secara permanen.');
         }
 
