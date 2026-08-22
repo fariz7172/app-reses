@@ -39,7 +39,7 @@ class SuratPermohonanController extends Controller
             $query->where('id_kecamatan', $kecamatanId);
         }
 
-        $surat = $query->orderBy('tanggal', 'desc')->paginate(10);
+        $surat = $query->orderBy('id', 'desc')->paginate(10);
         $surat->appends($request->all());
         
         return view('admin.surat-permohonan.index', compact('surat'));
@@ -117,7 +117,7 @@ class SuratPermohonanController extends Controller
             'hasil_survei' => 'nullable|string',
             'status' => 'required|string',
             'catatan' => 'nullable|string',
-            'photo.*' => 'nullable|image|max:2048'
+            'photo.*' => 'nullable|mimes:jpeg,png,jpg,webp|max:20480'
         ]);
 
         $fotoPaths = [];
@@ -192,7 +192,7 @@ class SuratPermohonanController extends Controller
             'hasil_survei' => 'nullable|string',
             'status' => 'required|string',
             'catatan' => 'nullable|string',
-            'photo.*' => 'nullable|image|max:2048'
+            'photo.*' => 'nullable|mimes:jpeg,png,jpg,webp|max:20480'
         ]);
 
         $fotoPaths = [];
@@ -332,6 +332,10 @@ class SuratPermohonanController extends Controller
 
     public function destroy(string $id)
     {
+        if (!in_array(auth()->user()->role, ['Super Admin', 'Sudin'])) {
+            return redirect()->back()->with('error', 'Akses ditolak. Anda tidak memiliki izin untuk menghapus data secara permanen.');
+        }
+
         $surat = SuratPermohonan::findOrFail($id);
         
         if ($surat->photo) {

@@ -60,6 +60,7 @@
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
             <thead>
                 <tr style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
+                    <th style="padding: 12px; color: #6b7280; font-weight: 600;">No</th>
                     <th style="padding: 12px; color: #6b7280; font-weight: 600;">No Surat</th>
                     <th style="padding: 12px; color: #6b7280; font-weight: 600;">Tanggal</th>
                     <th style="padding: 12px; color: #6b7280; font-weight: 600;">Dari (Pengirim)</th>
@@ -72,6 +73,7 @@
             <tbody>
                 @forelse($surat as $item)
                 <tr style="border-bottom: 1px solid #e5e7eb; vertical-align: top;">
+                    <td style="padding: 12px; color: #374151;">{{ $item->id }}</td>
                     <td style="padding: 12px; color: #111827; font-weight: 600;">{{ $item->nomor_surat }}</td>
                     <td style="padding: 12px; color: #374151;">{{ $item->tanggal ? \Carbon\Carbon::parse($item->tanggal)->format('d M Y') : '-' }}</td>
                     <td style="padding: 12px; color: #374151;">{{ $item->dari }}</td>
@@ -121,7 +123,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" style="padding: 24px; text-align: center; color: #6b7280;">Belum ada Surat Permohonan.</td>
+                    <td colspan="8" style="padding: 24px; text-align: center; color: #6b7280;">Belum ada Surat Permohonan.</td>
                 </tr>
                 @endforelse
             </tbody>

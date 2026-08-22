@@ -238,6 +238,34 @@
         }
     }
 
+    // Tambahkan Legend Control
+    const legend = L.control({ position: 'bottomright' });
+    legend.onAdd = function (map) {
+        const div = L.DomUtil.create('div', 'info legend');
+        div.style.backgroundColor = 'white';
+        div.style.padding = '10px 15px';
+        div.style.borderRadius = '8px';
+        div.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+        div.style.fontSize = '12px';
+        div.style.color = '#374151';
+        div.style.fontFamily = "'Inter', sans-serif";
+        
+        div.innerHTML = `
+            <div style="font-weight: 600; margin-bottom: 8px; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px;">Legenda</div>
+            <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                <div style="width: 12px; height: 12px; border-radius: 50%; background: #f97316; margin-right: 8px;"></div> Reses
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                <div style="width: 12px; height: 12px; border-radius: 50%; background: #3b82f6; margin-right: 8px;"></div> Usulan Masyarakat
+            </div>
+            <div style="display: flex; align-items: center;">
+                <div style="width: 12px; height: 12px; border-radius: 50%; background: #10b981; margin-right: 8px;"></div> Pekerjaan Selesai
+            </div>
+        `;
+        return div;
+    };
+    legend.addTo(map);
+
     // Inisialisasi awal
     renderMarkers();
 

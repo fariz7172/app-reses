@@ -1,0 +1,1 @@
+php artisan api:generate-token 1 --name="Token-MobileApp"

@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\FraksiController;
 use App\Http\Controllers\Admin\PelaksanaController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ActivityLogController;
 use Illuminate\Support\Facades\Artisan;
 
 // Setup Route (Hanya untuk dijalankan sekali di server)
@@ -37,7 +38,7 @@ Route::get('/', function () {
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Admin Routes (Protected by Auth)
@@ -80,5 +81,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     
     // User Management (Settings)
     Route::resource('users', UserController::class);
+    
+    // Activity Log
+    Route::get('/activity-log', [ActivityLogController::class, 'index'])->name('activity-log.index');
 
 });

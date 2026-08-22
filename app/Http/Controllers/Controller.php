@@ -16,10 +16,19 @@ abstract class Controller extends BaseController
      */
     protected function getKecamatanId()
     {
-        if (auth()->check() && auth()->user()->role === 'Kecamatan') {
-            $namaKecamatan = trim(str_replace('Kecamatan', '', auth()->user()->name));
-            $kecamatan = \App\Models\Kecamatan::where('nama_kecamatan', $namaKecamatan)->first();
-            return $kecamatan ? $kecamatan->id : null;
+        if (auth()->check()) {
+            $role = strtolower(auth()->user()->role);
+            
+            if ($role === 'kecamatan') {
+                $namaKecamatan = trim(str_ireplace('Kecamatan', '', auth()->user()->name));
+                $kecamatan = \App\Models\Kecamatan::where('nama_kecamatan', $namaKecamatan)->first();
+                return $kecamatan ? $kecamatan->id : -1;
+            }
+            if (in_array($role, ['super admin', 'admin', 'sudin', 'kasudin', 'kasubag'])) {
+                return null; // Akses ke semua wilayah
+            }
+            // Jika role lain mencoba akses data (misal Vendor tanpa izin), return ID invalid
+            return -1;
         }
         return null;
     }

@@ -157,7 +157,7 @@ class PekerjaanSdaController extends Controller
             'status_tindak_lanjut' => 'nullable|string',
             'latitude' => 'nullable|string',
             'longitude' => 'nullable|string',
-            'photo.*' => 'nullable|image|max:2048',
+            'photo.*' => 'nullable|mimes:jpeg,png,jpg,webp|max:20480',
             'id_pelaksana' => 'nullable|exists:pelaksanas,id',
             'id_vendor' => 'nullable|exists:vendors,id'
         ]);
@@ -301,7 +301,7 @@ class PekerjaanSdaController extends Controller
             'status_tindak_lanjut' => 'nullable|string',
             'latitude' => 'nullable|string',
             'longitude' => 'nullable|string',
-            'photo.*' => 'nullable|image|max:2048',
+            'photo.*' => 'nullable|mimes:jpeg,png,jpg,webp|max:20480',
             'id_pelaksana' => 'nullable|exists:pelaksanas,id',
             'id_vendor' => 'nullable|exists:vendors,id'
         ]);
@@ -398,6 +398,10 @@ class PekerjaanSdaController extends Controller
 
     public function destroy(string $id)
     {
+        if (!in_array(auth()->user()->role, ['Super Admin', 'Sudin'])) {
+            return redirect()->back()->with('error', 'Akses ditolak. Anda tidak memiliki izin untuk menghapus data secara permanen.');
+        }
+
         $pekerjaan = PekerjaanSda::findOrFail($id);
         
         // Batalkan proses pada Surat Permohonan jika terkait

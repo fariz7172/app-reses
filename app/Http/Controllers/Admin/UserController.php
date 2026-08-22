@@ -11,9 +11,8 @@ class UserController extends Controller
 {
     public function index()
     {
-        // Hanya yang bukan Kecamatan yang boleh masuk
-        if (auth()->user()->role === 'Kecamatan') {
-            return redirect()->route('admin.surat-permohonan.index')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
+        if (auth()->user()->role !== 'Super Admin') {
+            return redirect()->route('admin.dashboard')->with('error', 'Akses ditolak. Hanya Super Admin yang dapat mengakses halaman ini.');
         }
 
         $users = User::all();
@@ -22,16 +21,16 @@ class UserController extends Controller
 
     public function create()
     {
-        if (auth()->user()->role === 'Kecamatan') {
-            return redirect()->route('admin.surat-permohonan.index');
+        if (auth()->user()->role !== 'Super Admin') {
+            return redirect()->route('admin.dashboard')->with('error', 'Akses ditolak.');
         }
         return view('admin.users.create');
     }
 
     public function store(Request $request)
     {
-        if (auth()->user()->role === 'Kecamatan') {
-            return redirect()->route('admin.surat-permohonan.index');
+        if (auth()->user()->role !== 'Super Admin') {
+            return redirect()->route('admin.dashboard')->with('error', 'Akses ditolak.');
         }
 
         $request->validate([
@@ -53,8 +52,8 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        if (auth()->user()->role === 'Kecamatan') {
-            return redirect()->route('admin.surat-permohonan.index');
+        if (auth()->user()->role !== 'Super Admin') {
+            return redirect()->route('admin.dashboard')->with('error', 'Akses ditolak.');
         }
 
         $user = User::findOrFail($id);
@@ -63,8 +62,8 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (auth()->user()->role === 'Kecamatan') {
-            return redirect()->route('admin.surat-permohonan.index');
+        if (auth()->user()->role !== 'Super Admin') {
+            return redirect()->route('admin.dashboard')->with('error', 'Akses ditolak.');
         }
 
         $user = User::findOrFail($id);
@@ -93,8 +92,8 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        if (auth()->user()->role === 'Kecamatan') {
-            return redirect()->route('admin.surat-permohonan.index');
+        if (auth()->user()->role !== 'Super Admin') {
+            return redirect()->route('admin.dashboard')->with('error', 'Akses ditolak.');
         }
 
         $user = User::findOrFail($id);
