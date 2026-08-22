@@ -741,6 +741,15 @@
                     <span>Activity Log</span>
                 </a>
                 @endif
+                
+                @if(in_array(strtolower(auth()->user()->role ?? ''), ['super admin', 'admin', 'sudin']))
+                <a href="{{ route('admin.backup-database') }}" class="nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 17.25V19.5a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 19.5v-2.25M19.5 12l-7.5 7.5-7.5-7.5m7.5-9v16.5" />
+                    </svg>
+                    <span>Backup Database</span>
+                </a>
+                @endif
 
             </nav>
 

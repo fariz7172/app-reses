@@ -83,6 +83,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
     
     // Activity Log
-    Route::get('/activity-log', [ActivityLogController::class, 'index'])->name('activity-log.index');
+    Route::get('/activity-log', [App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-log.index');
 
+    // Database Backup
+    Route::get('/backup-database', [App\Http\Controllers\Admin\DatabaseBackupController::class, 'download'])->name('backup-database');
 });
