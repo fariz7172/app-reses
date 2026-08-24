@@ -17,7 +17,7 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.master.dewan.update', $dewan->id) }}" method="POST">
+        <form action="{{ route('admin.master.dewan.update', $dewan->eid) }}" method="POST">
             @csrf
             @method('PUT')
             

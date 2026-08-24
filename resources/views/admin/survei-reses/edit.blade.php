@@ -18,7 +18,7 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.survei-reses.update', $survei->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.survei-reses.update', $survei->eid) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             

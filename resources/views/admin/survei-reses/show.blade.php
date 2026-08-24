@@ -107,7 +107,7 @@
         </div>
 
         <div style="margin-top: 40px; text-align: right;">
-            <a href="{{ route('admin.survei-reses.edit', $survei->id) }}" class="btn btn-primary" style="padding: 10px 20px;">Edit Data Ini</a>
+            <a href="{{ route('admin.survei-reses.edit', $survei->eid) }}" class="btn btn-primary" style="padding: 10px 20px;">Edit Data Ini</a>
         </div>
     </div>
 </div>

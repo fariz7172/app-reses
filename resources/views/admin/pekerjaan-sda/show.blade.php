@@ -222,7 +222,7 @@
         </div>
 
         <div style="margin-top: 40px; text-align: right;">
-            <a href="{{ route('admin.pekerjaan-sda.edit', $pekerjaan->id) }}" class="btn btn-primary" style="padding: 10px 20px;">Edit & Update Progress</a>
+            <a href="{{ route('admin.pekerjaan-sda.edit', $pekerjaan->eid) }}" class="btn btn-primary" style="padding: 10px 20px;">Edit & Update Progress</a>
         </div>
     </div>
 </div>
