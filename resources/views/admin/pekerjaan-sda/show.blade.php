@@ -205,7 +205,7 @@
                     </div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
                         @foreach($fotosBefore as $fb)
-                            <img src="{{ asset('storage/'.str_replace('public/', '', $fb)) }}" alt="Before" style="width: 100%; max-width: 200px; height: 140px; object-fit: cover; border-radius: 6px; border: 1px solid #f87171;">
+                            <img src="{{ asset('storage/'.str_replace('public/', '', $fb)) }}" alt="Before" onclick="openLightbox(this)" style="width: 100%; max-width: 200px; height: 140px; object-fit: cover; border-radius: 6px; border: 1px solid #f87171; cursor: zoom-in; transition: transform 0.15s, box-shadow 0.15s;" onmouseover="this.style.transform='scale(1.04)';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='none'">
                         @endforeach
                     </div>
                 @else
@@ -249,7 +249,7 @@
                     </div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
                         @foreach($fotosAfter as $fa)
-                            <img src="{{ asset('storage/'.str_replace('public/', '', $fa)) }}" alt="After" style="width: 100%; max-width: 200px; height: 140px; object-fit: cover; border-radius: 6px; border: 1px solid #4ade80;">
+                            <img src="{{ asset('storage/'.str_replace('public/', '', $fa)) }}" alt="After" onclick="openLightbox(this)" style="width: 100%; max-width: 200px; height: 140px; object-fit: cover; border-radius: 6px; border: 1px solid #4ade80; cursor: zoom-in; transition: transform 0.15s, box-shadow 0.15s;" onmouseover="this.style.transform='scale(1.04)';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='none'">
                         @endforeach
                     </div>
                 @else
@@ -294,5 +294,71 @@
         .openPopup();
 </script>
 @endif
+
+{{-- ===== LIGHTBOX MODAL ===== --}}
+<div id="lightbox" onclick="closeLightbox()" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.92); align-items:center; justify-content:center; padding:20px;">
+    <!-- Close button -->
+    <button onclick="closeLightbox()" style="position:absolute; top:20px; right:24px; background:rgba(255,255,255,0.15); border:none; color:white; border-radius:999px; width:40px; height:40px; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; z-index:2;">&times;</button>
+
+    <!-- Prev -->
+    <button id="lb-prev" onclick="event.stopPropagation(); lbNav(-1)" style="position:absolute; left:16px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.15); border:none; color:white; border-radius:999px; width:44px; height:44px; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2;">&#8592;</button>
+
+    <!-- Image -->
+    <div onclick="event.stopPropagation()" style="max-width:90vw; max-height:90vh; display:flex; flex-direction:column; align-items:center; gap:12px;">
+        <img id="lb-img" src="" alt="" style="max-width:90vw; max-height:80vh; object-fit:contain; border-radius:10px; box-shadow:0 8px 40px rgba(0,0,0,0.6);">
+        <div id="lb-counter" style="color:rgba(255,255,255,0.6); font-size:13px; font-weight:600;"></div>
+    </div>
+
+    <!-- Next -->
+    <button id="lb-next" onclick="event.stopPropagation(); lbNav(1)" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.15); border:none; color:white; border-radius:999px; width:44px; height:44px; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2;">&#8594;</button>
+</div>
+
+<script>
+    // Kumpulkan semua gambar yang bisa diklik
+    let lbImages = [];
+    let lbIndex  = 0;
+
+    function buildImageList() {
+        lbImages = Array.from(document.querySelectorAll('img[onclick="openLightbox(this)"]'))
+            .map(img => img.src);
+    }
+
+    function openLightbox(img) {
+        buildImageList();
+        lbIndex = lbImages.indexOf(img.src);
+        showLbImage();
+        const lb = document.getElementById('lightbox');
+        lb.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    function lbNav(dir) {
+        lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+        showLbImage();
+    }
+
+    function showLbImage() {
+        document.getElementById('lb-img').src = lbImages[lbIndex];
+        document.getElementById('lb-counter').textContent = (lbIndex + 1) + ' / ' + lbImages.length;
+        document.getElementById('lb-prev').style.display = lbImages.length > 1 ? 'flex' : 'none';
+        document.getElementById('lb-next').style.display = lbImages.length > 1 ? 'flex' : 'none';
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        const lb = document.getElementById('lightbox');
+        if (lb.style.display === 'flex') {
+            if (e.key === 'ArrowRight') lbNav(1);
+            if (e.key === 'ArrowLeft')  lbNav(-1);
+            if (e.key === 'Escape')     closeLightbox();
+        }
+    });
+</script>
+{{-- ===== END LIGHTBOX ===== --}}
 
 @endsection
