@@ -16,33 +16,71 @@
         </div>
     </div>
 
-    {{-- ===== TAB NAVIGATION ===== --}}
-    <div style="padding: 0 20px; border-bottom: 2px solid #e5e7eb; display: flex; gap: 4px; margin-top: 8px;">
+    {{-- ===== FILTER KARTU KATEGORI ===== --}}
+    <div style="padding: 16px 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; border-bottom: 2px solid #e5e7eb;">
+
+        {{-- Kartu: Semua --}}
         <a href="{{ route('admin.pekerjaan-sda.index') }}?tab=semua&{{ http_build_query(request()->except(['tab', 'page'])) }}"
-           style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 8px 8px 0 0; transition: all 0.2s;
-                  {{ $tab === 'semua' ? 'color: #1F6F5F; border-bottom: 3px solid #1F6F5F; background: #f0fdf4;' : 'color: #6b7280; border-bottom: 3px solid transparent;' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" /></svg>
-            Semua
-            <span style="background: #e5e7eb; color: #374151; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px;">{{ $countAll }}</span>
+           style="display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-radius: 12px; text-decoration: none; transition: all 0.2s; border: 2px solid;
+                  {{ $tab === 'semua' ? 'background: #f0fdf4; border-color: #1F6F5F; box-shadow: 0 2px 8px rgba(31,111,95,0.15);' : 'background: #f9fafb; border-color: #e5e7eb;' }}">
+            <div style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+                        {{ $tab === 'semua' ? 'background: #1F6F5F;' : 'background: #e5e7eb;' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="{{ $tab === 'semua' ? 'white' : '#6b7280' }}" width="22" height="22">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
+                </svg>
+            </div>
+            <div>
+                <div style="font-size: 24px; font-weight: 800; line-height: 1; {{ $tab === 'semua' ? 'color: #1F6F5F;' : 'color: #374151;' }}">{{ $countAll }}</div>
+                <div style="font-size: 12px; font-weight: 600; margin-top: 3px; {{ $tab === 'semua' ? 'color: #1F6F5F;' : 'color: #6b7280;' }}">Semua Pekerjaan</div>
+            </div>
+            @if($tab === 'semua')
+                <div style="margin-left: auto; width: 8px; height: 8px; background: #1F6F5F; border-radius: 999px;"></div>
+            @endif
         </a>
 
+        {{-- Kartu: Hasil Reses --}}
         <a href="{{ route('admin.pekerjaan-sda.index') }}?tab=reses&{{ http_build_query(request()->except(['tab', 'page'])) }}"
-           style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 8px 8px 0 0; transition: all 0.2s;
-                  {{ $tab === 'reses' ? 'color: #7c3aed; border-bottom: 3px solid #7c3aed; background: #f5f3ff;' : 'color: #6b7280; border-bottom: 3px solid transparent;' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>
-            Hasil Reses
-            <span style="background: #ede9fe; color: #7c3aed; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px;">{{ $countReses }}</span>
+           style="display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-radius: 12px; text-decoration: none; transition: all 0.2s; border: 2px solid;
+                  {{ $tab === 'reses' ? 'background: #f5f3ff; border-color: #7c3aed; box-shadow: 0 2px 8px rgba(124,58,237,0.15);' : 'background: #f9fafb; border-color: #e5e7eb;' }}">
+            <div style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+                        {{ $tab === 'reses' ? 'background: #7c3aed;' : 'background: #ede9fe;' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="{{ $tab === 'reses' ? 'white' : '#7c3aed' }}" width="22" height="22">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                </svg>
+            </div>
+            <div>
+                <div style="font-size: 24px; font-weight: 800; line-height: 1; {{ $tab === 'reses' ? 'color: #7c3aed;' : 'color: #374151;' }}">{{ $countReses }}</div>
+                <div style="font-size: 12px; font-weight: 600; margin-top: 3px; {{ $tab === 'reses' ? 'color: #7c3aed;' : 'color: #6b7280;' }}">🏛 Hasil Reses</div>
+            </div>
+            @if($tab === 'reses')
+                <div style="margin-left: auto; width: 8px; height: 8px; background: #7c3aed; border-radius: 999px;"></div>
+            @endif
         </a>
 
+        {{-- Kartu: Aspirasi Masyarakat --}}
         <a href="{{ route('admin.pekerjaan-sda.index') }}?tab=masyarakat&{{ http_build_query(request()->except(['tab', 'page'])) }}"
-           style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 8px 8px 0 0; transition: all 0.2s;
-                  {{ $tab === 'masyarakat' ? 'color: #0369a1; border-bottom: 3px solid #0369a1; background: #eff6ff;' : 'color: #6b7280; border-bottom: 3px solid transparent;' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>
-            Aspirasi Masyarakat
-            <span style="background: #dbeafe; color: #1d4ed8; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px;">{{ $countMasyarakat }}</span>
+           style="display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-radius: 12px; text-decoration: none; transition: all 0.2s; border: 2px solid;
+                  {{ $tab === 'masyarakat' ? 'background: #eff6ff; border-color: #0369a1; box-shadow: 0 2px 8px rgba(3,105,161,0.15);' : 'background: #f9fafb; border-color: #e5e7eb;' }}">
+            <div style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+                        {{ $tab === 'masyarakat' ? 'background: #0369a1;' : 'background: #dbeafe;' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="{{ $tab === 'masyarakat' ? 'white' : '#0369a1' }}" width="22" height="22">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                </svg>
+            </div>
+            <div>
+                <div style="font-size: 24px; font-weight: 800; line-height: 1; {{ $tab === 'masyarakat' ? 'color: #0369a1;' : 'color: #374151;' }}">{{ $countMasyarakat }}</div>
+                <div style="font-size: 12px; font-weight: 600; margin-top: 3px; {{ $tab === 'masyarakat' ? 'color: #0369a1;' : 'color: #6b7280;' }}">👥 Aspirasi Masyarakat</div>
+            </div>
+            @if($tab === 'masyarakat')
+                <div style="margin-left: auto; width: 8px; height: 8px; background: #0369a1; border-radius: 999px;"></div>
+            @endif
         </a>
+
     </div>
-    {{-- ===== END TAB NAVIGATION ===== --}}
+    {{-- ===== END FILTER KARTU KATEGORI ===== --}}
+
+
+
 
     <div style="padding: 20px; overflow-x: auto;">
 
