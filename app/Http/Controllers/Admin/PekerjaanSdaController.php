@@ -32,12 +32,12 @@ class PekerjaanSdaController extends Controller
             $countBase->where('id_kecamatan', $kecamatanId);
         }
         $countAll       = (clone $countBase)->count();
-        $countReses     = (clone $countBase)->where('sumber_data', 'Hasil Reses')->count();
+        $countReses     = (clone $countBase)->where('sumber_data', 'Reses')->count();
         $countMasyarakat = (clone $countBase)->where('sumber_data', 'Masyarakat')->count();
 
         // Filter berdasarkan tab aktif
         if ($tab === 'reses') {
-            $query->where('sumber_data', 'Hasil Reses');
+            $query->where('sumber_data', 'Reses');
         } elseif ($tab === 'masyarakat') {
             $query->where('sumber_data', 'Masyarakat');
         }
