@@ -17,6 +17,8 @@ class PekerjaanSdaController extends Controller
 {
     public function index(Request $request)
     {
+        $tab = $request->get('tab', 'semua'); // semua, reses, masyarakat
+
         $query = PekerjaanSda::with(['dewan', 'kecamatan', 'kelurahan', 'suratPermohonan', 'surveiReses']);
         
         $kecamatanId = $this->getKecamatanId();
@@ -24,19 +26,33 @@ class PekerjaanSdaController extends Controller
             $query->where('id_kecamatan', $kecamatanId);
         }
 
+        // Hitung jumlah per kategori untuk badge tab (query terpisah)
+        $countBase = PekerjaanSda::query();
+        if ($kecamatanId) {
+            $countBase->where('id_kecamatan', $kecamatanId);
+        }
+        $countAll       = (clone $countBase)->count();
+        $countReses     = (clone $countBase)->where('sumber_data', 'Hasil Reses')->count();
+        $countMasyarakat = (clone $countBase)->where('sumber_data', 'Masyarakat')->count();
+
+        // Filter berdasarkan tab aktif
+        if ($tab === 'reses') {
+            $query->where('sumber_data', 'Hasil Reses');
+        } elseif ($tab === 'masyarakat') {
+            $query->where('sumber_data', 'Masyarakat');
+        }
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('kode_tracking', 'like', "%{$search}%")
                   ->orWhere('no_skpd', 'like', "%{$search}%")
+                  ->orWhere('deskripsi', 'like', "%{$search}%")
+                  ->orWhere('alamat', 'like', "%{$search}%")
                   ->orWhereHas('surveiReses', function($q2) use ($search) {
                       $q2->where('no_reses', 'like', "%{$search}%");
                   });
             });
-        }
-
-        if ($request->filled('sumber_data')) {
-            $query->where('sumber_data', $request->sumber_data);
         }
 
         if ($request->filled('progress')) {
@@ -47,7 +63,7 @@ class PekerjaanSdaController extends Controller
             }
         }
 
-        if ($request->sumber_data === 'Reses') {
+        if ($tab === 'reses') {
             $query->orderBy(
                 \App\Models\SurveiReses::selectRaw('CAST(no_reses AS UNSIGNED)')
                     ->whereColumn('survei_reses.id', 'pekerjaan_sdas.id_survei_reses')
@@ -58,10 +74,11 @@ class PekerjaanSdaController extends Controller
             $query->latest();
         }
 
-        $pekerjaan = $query->paginate(10);
+        $pekerjaan = $query->paginate(15);
         $pekerjaan->appends($request->all());
-        return view('admin.pekerjaan-sda.index', compact('pekerjaan'));
+        return view('admin.pekerjaan-sda.index', compact('pekerjaan', 'tab', 'countAll', 'countReses', 'countMasyarakat'));
     }
+
 
     public function exportExcel(Request $request)
     {

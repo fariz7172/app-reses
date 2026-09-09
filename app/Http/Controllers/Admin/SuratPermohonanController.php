@@ -299,7 +299,7 @@ class SuratPermohonanController extends Controller
             'id_pekerjaan_sda' => $pekerjaan->id
         ]);
 
-        return redirect()->route('admin.pekerjaan-sda.edit', $pekerjaan->id)
+        return redirect()->route('admin.pekerjaan-sda.edit', $pekerjaan->eid)
                          ->with('success', 'Berhasil! Usulan/Surat disalin menjadi Pekerjaan SDA baru.');
     }
 

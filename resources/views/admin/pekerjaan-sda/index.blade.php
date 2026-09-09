@@ -15,22 +15,49 @@
             </a>
         </div>
     </div>
-    
+
+    {{-- ===== TAB NAVIGATION ===== --}}
+    <div style="padding: 0 20px; border-bottom: 2px solid #e5e7eb; display: flex; gap: 4px; margin-top: 8px;">
+        <a href="{{ route('admin.pekerjaan-sda.index') }}?tab=semua&{{ http_build_query(request()->except(['tab', 'page'])) }}"
+           style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 8px 8px 0 0; transition: all 0.2s;
+                  {{ $tab === 'semua' ? 'color: #1F6F5F; border-bottom: 3px solid #1F6F5F; background: #f0fdf4;' : 'color: #6b7280; border-bottom: 3px solid transparent;' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" /></svg>
+            Semua
+            <span style="background: #e5e7eb; color: #374151; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px;">{{ $countAll }}</span>
+        </a>
+
+        <a href="{{ route('admin.pekerjaan-sda.index') }}?tab=reses&{{ http_build_query(request()->except(['tab', 'page'])) }}"
+           style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 8px 8px 0 0; transition: all 0.2s;
+                  {{ $tab === 'reses' ? 'color: #7c3aed; border-bottom: 3px solid #7c3aed; background: #f5f3ff;' : 'color: #6b7280; border-bottom: 3px solid transparent;' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>
+            Hasil Reses
+            <span style="background: #ede9fe; color: #7c3aed; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px;">{{ $countReses }}</span>
+        </a>
+
+        <a href="{{ route('admin.pekerjaan-sda.index') }}?tab=masyarakat&{{ http_build_query(request()->except(['tab', 'page'])) }}"
+           style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 8px 8px 0 0; transition: all 0.2s;
+                  {{ $tab === 'masyarakat' ? 'color: #0369a1; border-bottom: 3px solid #0369a1; background: #eff6ff;' : 'color: #6b7280; border-bottom: 3px solid transparent;' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>
+            Aspirasi Masyarakat
+            <span style="background: #dbeafe; color: #1d4ed8; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px;">{{ $countMasyarakat }}</span>
+        </a>
+    </div>
+    {{-- ===== END TAB NAVIGATION ===== --}}
+
     <div style="padding: 20px; overflow-x: auto;">
-        <form method="GET" action="{{ route('admin.pekerjaan-sda.index') }}" style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center;">
-            <select name="sumber_data" style="padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 13px; min-width: 250px; background: white; color: #374151;">
-                <option value="">Semua Sumber Data</option>
-                <option value="Masyarakat" {{ request('sumber_data') == 'Masyarakat' ? 'selected' : '' }}>Masyarakat (Usulan)</option>
-                <option value="Reses" {{ request('sumber_data') == 'Reses' ? 'selected' : '' }}>Hasil Reses</option>
-            </select>
-            <select name="progress" style="padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 13px; min-width: 200px; background: white; color: #374151;">
+
+        {{-- Filter Bar --}}
+        <form method="GET" action="{{ route('admin.pekerjaan-sda.index') }}" style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
+            <input type="hidden" name="tab" value="{{ $tab }}">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari no. reses, deskripsi, alamat..." style="padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 13px; min-width: 260px; outline: none;">
+            <select name="progress" style="padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 13px; min-width: 180px; background: white; color: #374151;">
                 <option value="">Semua Progress</option>
                 <option value="100" {{ request('progress') == '100' ? 'selected' : '' }}>100% (Selesai)</option>
                 <option value="<100" {{ request('progress') == '<100' ? 'selected' : '' }}>&lt;100% Perencanaan</option>
             </select>
             <button type="submit" style="background: #111827; color: white; padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 13px;">Filter</button>
-            @if(request('sumber_data') || request('progress'))
-                <a href="{{ route('admin.pekerjaan-sda.index') }}" style="padding: 10px 16px; border-radius: 8px; border: 1px solid #d1d5db; color: #374151; text-decoration: none; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center;">Reset</a>
+            @if(request('search') || request('progress'))
+                <a href="{{ route('admin.pekerjaan-sda.index') }}?tab={{ $tab }}" style="padding: 10px 16px; border-radius: 8px; border: 1px solid #d1d5db; color: #374151; text-decoration: none; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center;">Reset</a>
             @endif
         </form>
 
@@ -47,6 +74,25 @@
         @if(session('success'))
             <div style="background: #ecfdf5; color: #059669; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
                 {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div style="background: #fef2f2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        {{-- Label Tab Aktif --}}
+        @if($tab === 'reses')
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding: 10px 14px; background: #f5f3ff; border-left: 4px solid #7c3aed; border-radius: 0 8px 8px 0;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#7c3aed" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>
+                <span style="font-size: 13px; font-weight: 600; color: #7c3aed;">Menampilkan: Pekerjaan SDA dari Hasil Reses</span>
+            </div>
+        @elseif($tab === 'masyarakat')
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding: 10px 14px; background: #eff6ff; border-left: 4px solid #0369a1; border-radius: 0 8px 8px 0;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#0369a1" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>
+                <span style="font-size: 13px; font-weight: 600; color: #0369a1;">Menampilkan: Pekerjaan SDA dari Aspirasi Masyarakat</span>
             </div>
         @endif
 
@@ -67,7 +113,14 @@
                 <tr style="border-bottom: 1px solid #e5e7eb; vertical-align: top;">
                     <td style="padding: 12px; color: #374151;">{{ ($pekerjaan->currentPage() - 1) * $pekerjaan->perPage() + $index + 1 }}</td>
                     <td style="padding: 12px; color: #111827;">
-                        <span style="font-weight: 600;">{{ $item->sumber_data }}</span><br>
+                        @if($item->sumber_data === 'Hasil Reses')
+                            <span style="background: #ede9fe; color: #7c3aed; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; display: inline-block; margin-bottom: 4px;">🏛 Reses</span>
+                        @elseif($item->sumber_data === 'Masyarakat')
+                            <span style="background: #dbeafe; color: #1d4ed8; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; display: inline-block; margin-bottom: 4px;">👥 Aspirasi</span>
+                        @else
+                            <span style="font-weight: 600;">{{ $item->sumber_data }}</span>
+                        @endif
+                        <br>
                         @if($item->no_skpd)
                             <small style="color: #4b5563; font-weight: 600;">Ref: {{ $item->no_skpd }}</small><br>
                         @endif
@@ -75,7 +128,7 @@
                             <small style="color: #4b5563; font-weight: 600;">Tracking: {{ $item->kode_tracking }}</small><br>
                         @endif
                         @if($item->id_survei_reses)
-                            <small style="color: #059669; background: #d1fae5; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px;">Terkait Reses #{{ $item->surveiReses ? ($item->surveiReses->no_reses ?? $item->id_survei_reses) : $item->id_survei_reses }}</small>
+                            <small style="color: #059669; background: #d1fae5; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px;">Reses #{{ $item->surveiReses ? ($item->surveiReses->no_reses ?? $item->id_survei_reses) : $item->id_survei_reses }}</small>
                         @endif
                     </td>
                     <td style="padding: 12px; color: #374151;">
@@ -118,7 +171,15 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" style="padding: 24px; text-align: center; color: #6b7280;">Belum ada data Pekerjaan SDA.</td>
+                    <td colspan="7" style="padding: 40px; text-align: center; color: #6b7280;">
+                        @if($tab === 'reses')
+                            Belum ada Pekerjaan SDA dari Hasil Reses.
+                        @elseif($tab === 'masyarakat')
+                            Belum ada Pekerjaan SDA dari Aspirasi Masyarakat.
+                        @else
+                            Belum ada data Pekerjaan SDA.
+                        @endif
+                    </td>
                 </tr>
                 @endforelse
             </tbody>
