@@ -26,14 +26,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Dilindungi oleh Sanctum (wajib bawa token) dan rate limiting (maksimal 60 request per menit)
 Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     // Pekerjaan SDA
+    Route::get('/pekerjaan-sda', [PekerjaanSdaApiController::class, 'index']);
     Route::get('/pekerjaan-sda/map', [PekerjaanSdaApiController::class, 'getMapData']);
     Route::get('/pekerjaan-sda/{id}', [PekerjaanSdaApiController::class, 'getDetail']);
+    Route::post('/pekerjaan-sda', [PekerjaanSdaApiController::class, 'store']);
+    Route::match(['put', 'post'], '/pekerjaan-sda/{id}', [PekerjaanSdaApiController::class, 'update']);
+    Route::patch('/pekerjaan-sda/{id}/progress', [PekerjaanSdaApiController::class, 'updateProgress']);
 
     // Surat Permohonan (Usulan Masyarakat)
     Route::get('/surat-permohonan/map', [SuratPermohonanApiController::class, 'getMapData']);
     Route::get('/surat-permohonan/{id}', [SuratPermohonanApiController::class, 'getDetail']);
 
     // Survei Reses (Usulan Dewan)
+    Route::get('/survei-reses', [SurveiResesApiController::class, 'index']);
     Route::get('/survei-reses/map', [SurveiResesApiController::class, 'getMapData']);
     Route::get('/survei-reses/{id}', [SurveiResesApiController::class, 'getDetail']);
+    Route::post('/survei-reses', [SurveiResesApiController::class, 'store']);
+    Route::match(['put', 'post'], '/survei-reses/{id}', [SurveiResesApiController::class, 'update']);
 });
+
