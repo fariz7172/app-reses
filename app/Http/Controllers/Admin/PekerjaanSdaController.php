@@ -436,7 +436,12 @@ class PekerjaanSdaController extends Controller
         }
 
         if ($request->filled('sumber_data')) {
-            $query->where('sumber_data', $request->sumber_data);
+            $sumber = strtolower(trim($request->sumber_data));
+            if ($sumber === 'inventory' || $sumber === 'iventory') {
+                $query->whereIn('sumber_data', ['Inventory', 'inventory', 'Iventory', 'iventory']);
+            } else {
+                $query->where('sumber_data', $request->sumber_data);
+            }
         }
 
         $pekerjaan = $query->get();

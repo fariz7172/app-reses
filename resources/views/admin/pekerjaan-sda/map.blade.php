@@ -72,12 +72,13 @@
 <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
     <div>
         <h2 style="font-size: 18px; font-weight: 700; color: #1F6F5F; margin: 0;">Peta Sebaran Pekerjaan SDA</h2>
-        <p style="font-size: 13px; color: #6b7280; margin: 4px 0 0;">Menampilkan <span id="marker-count">{{ $pekerjaan->count() }}</span> titik pekerjaan yang memiliki data koordinat valid (<strong style="color: #059669;"><span id="selesai-count">0</span> Selesai</strong>, <strong style="color: #d97706;"><span id="proses-count">0</span> Proses</strong>).</p>
+        <p style="font-size: 13px; color: #6b7280; margin: 4px 0 0;">Menampilkan <span id="marker-count">{{ $pekerjaan->count() }}</span> titik pekerjaan yang memiliki data koordinat valid (<strong style="color: #ec4899;"><span id="inventory-count">0</span> Inventory</strong>, <strong style="color: #059669;"><span id="selesai-count">0</span> Selesai</strong>, <strong style="color: #d97706;"><span id="proses-count">0</span> Proses</strong>).</p>
     </div>
     
     <div style="display: flex; gap: 10px;">
         <select id="filter-sumber-data" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; cursor: pointer; color: #374151;">
             <option value="">-- Semua Sumber Data --</option>
+            <option value="Inventory" {{ strtolower(request('sumber_data')) == 'inventory' ? 'selected' : '' }}>Inventory</option>
             <option value="Masyarakat" {{ request('sumber_data') == 'Masyarakat' ? 'selected' : '' }}>Masyarakat (Usulan)</option>
             <option value="Reses" {{ request('sumber_data') == 'Reses' ? 'selected' : '' }}>Hasil Reses</option>
         </select>
@@ -135,6 +136,22 @@
         shadowSize: [41, 41]
     });
 
+    // Definisikan Custom Icon untuk Inventory (Warna Pink)
+    const pinkSvg = encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 41" width="25" height="41">
+            <path d="M12.5 0C5.596 0 0 5.596 0 12.5c0 9.375 12.5 28.5 12.5 28.5S25 21.875 25 12.5C25 5.596 19.404 0 12.5 0z" fill="#ec4899" stroke="#be185d" stroke-width="1.2"/>
+            <circle cx="12.5" cy="12.5" r="4.5" fill="#ffffff"/>
+        </svg>
+    `);
+    const pinkIcon = new L.Icon({
+        iconUrl: 'data:image/svg+xml;charset=utf-8,' + pinkSvg,
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
     function renderMarkers() {
         markerGroup.clearLayers();
         allMarkers.length = 0;
@@ -145,6 +162,7 @@
         let count = 0;
         let countSelesai = 0;
         let countProses = 0;
+        let countInventory = 0;
 
         pekerjaanData.forEach(item => {
             // Filter kecamatan
@@ -153,8 +171,16 @@
             }
 
             // Filter sumber data
-            if (selectedSumberData && item.sumber_data != selectedSumberData) {
-                return;
+            if (selectedSumberData) {
+                let itemSumber = (item.sumber_data || '').toLowerCase().trim();
+                let filterSumber = selectedSumberData.toLowerCase().trim();
+                if (filterSumber === 'inventory') {
+                    if (itemSumber !== 'inventory' && itemSumber !== 'iventory') return;
+                } else if (filterSumber === 'reses') {
+                    if (itemSumber !== 'reses' && itemSumber !== 'hasil reses') return;
+                } else if (itemSumber !== filterSumber) {
+                    return;
+                }
             }
 
             let lat = parseFloat(item.latitude);
@@ -198,10 +224,16 @@
                     </div>
                 `;
 
+                let sumber = (item.sumber_data || '').toLowerCase().trim();
+                let isInventory = sumber === 'inventory' || sumber === 'iventory';
+
                 let markerOptions = {};
-                if (item.progress == 100) {
+                if (isInventory) {
+                    markerOptions.icon = pinkIcon;
+                    countInventory++;
+                } else if (item.progress == 100) {
                     markerOptions.icon = greenIcon;
-                } else if (item.sumber_data === 'Reses') {
+                } else if (sumber === 'reses' || sumber === 'hasil reses') {
                     markerOptions.icon = orangeIcon;
                 }
 
@@ -230,6 +262,9 @@
         });
 
         document.getElementById('marker-count').innerText = count;
+        if (document.getElementById('inventory-count')) {
+            document.getElementById('inventory-count').innerText = countInventory;
+        }
         document.getElementById('selesai-count').innerText = countSelesai;
         document.getElementById('proses-count').innerText = countProses;
 
@@ -252,6 +287,9 @@
         
         div.innerHTML = `
             <div style="font-weight: 600; margin-bottom: 8px; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px;">Legenda</div>
+            <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                <div style="width: 12px; height: 12px; border-radius: 50%; background: #ec4899; margin-right: 8px;"></div> Inventory
+            </div>
             <div style="display: flex; align-items: center; margin-bottom: 6px;">
                 <div style="width: 12px; height: 12px; border-radius: 50%; background: #f97316; margin-right: 8px;"></div> Reses
             </div>
