@@ -1,28 +1,29 @@
-# Product Requirements Document (PRD) & Release Notes: API Integration Update
+# Product Requirements Document (PRD) & Release Notes: API Integration & GIS Map Update
 **Aplikasi:** Sistem Informasi Manajemen Reses & Aspirasi (App-Reses)  
-**Tanggal Rilis:** 18 Oktober 2026  
-**Versi:** 2.1.0 (RESTful API & Integrasi Eksternal)  
+**Tanggal Rilis:** 18 - 22 Oktober 2026  
+**Versi:** 2.1.1 (RESTful API & GIS Map Inventory Integration)  
 **Penulis:** Tim Pengembang App-Reses  
 
 ---
 
 ## 1. Latar Belakang & Tujuan (Background & Objectives)
 
-Seiring kebutuhan integrasi dengan aplikasi eksternal (seperti **Aplikasi Mobile**, aplikasi **Inventory SDA JU**, dan sistem pihak ketiga), App-Reses membutuhkan API mandiri yang tangguh, aman, dan berstandar RESTful.
+Seiring kebutuhan integrasi dengan aplikasi eksternal (seperti **Aplikasi Mobile**, aplikasi **Inventory SDA JU**, dan sistem pihak ketiga), App-Reses membutuhkan API mandiri yang tangguh, aman, dan berstandar RESTful, serta visualisasi pemetaan GIS yang membedakan sumber data pekerjaan secara akurat.
 
 ### Tujuan Utama:
 1. **Ketersediaan Layanan API Mandiri (Headless/API-First):** Memungkinkan aplikasi mobile atau klien pihak ketiga melakukan operasi penuh (**Create, Read, Update**) terhadap data aspirasi dan pekerjaan fisik tanpa melewati antarmuka web.
 2. **Efisiensi & Optimasi Storage:** Mengurangi ukuran file foto lapangan melalui konversi otomatis gambar ke format **WebP** dengan kualitas seimbang.
 3. **Fleksibilitas Data Lapangan:** Mendukung aspirasi langsung masyarakat atau survei internal yang tidak selalu terikat dengan Anggota Dewan (`id_dewan` kini opsional).
 4. **Resiliensi & Standardisasi Error:** Meniadakan crash halaman HTML 500 Internal Server Error saat request API gagal, menggantinya dengan respons JSON HTTP 422/404/500 yang ramah developer.
+5. **Diferensiasi Visual GIS (Peta Lokasi):** Membedakan marker pekerjaan fisik yang bersumber dari aplikasi **Inventory** dengan warna khusus (**Pink**) dan memperbarui panel legenda peta.
 
 ---
 
 ## 2. Ruang Lingkup Perubahan (Scope of Changes)
 
-Pembaruan pada tanggal 18 Oktober 2026 mencakup:
+Pembaruan pada 18 - 22 Oktober 2026 mencakup:
 
-| Area | Sebelum Update | Setelah Update (v2.1.0) |
+| Area | Sebelum Update | Setelah Update (v2.1.1) |
 |---|---|---|
 | **CRUD Pekerjaan SDA** | Hanya `GET /map` & `GET /{id}` | Lengkap: `GET List (Pagination)`, `GET /map`, `GET /{id}`, `POST`, `PUT/POST Update`, `PATCH Progress` |
 | **CRUD Survei Reses** | Hanya `GET /map` & `GET /{id}` | Lengkap: `GET List (Pagination)`, `GET /map`, `GET /{id}`, `POST`, `PUT/POST Update` |
@@ -30,6 +31,8 @@ Pembaruan pada tanggal 18 Oktober 2026 mencakup:
 | **Aturan `id_dewan`** | Wajib (`NOT NULL` di database) | **Opsional / Boleh kosong** di database & validasi controller |
 | **Handling Input Kosong** | String kosong `""` memicu error validasi foreign key | Normalisasi otomatis: string `""` dikonversi ke `null` |
 | **Pencegahan Error Duplikat** | Crash 500 jika `kode_tracking` duplikat | Validasi Laravel `unique` + fallback tangkap exception (HTTP 422) |
+| **Visualisasi GIS Map** | Hanya marker Hijau (selesai), Orange (reses), Biru (umum) | **Marker Pink (`#ec4899`)** khusus data `sumber_data = Inventory / Iventory` + Legenda Pink |
+| **Filter & Counter Peta** | Filter hanya Masyarakat & Reses | Tambah opsi filter **Inventory** + counter `<span id="inventory-count">` |
 | **Koleksi Postman** | Belum tersedia | Disediakan file **`App-Reses-API.postman_collection.json`** siap pakai |
 
 ---
@@ -136,12 +139,30 @@ Untuk mengoptimalkan kuota bandwidth server dan mempercepat loading aplikasi mob
 - Penanganan transparansi PNG (`imagealphablending` & `imagesavealpha`).
 - Nama berkas di-generate menggunakan `UUID v4` unik untuk menghindari tabrakan nama file.
 
+## 6. Visualisasi GIS & Marker Khusus Inventory (Update 22 Oktober 2026)
+
+Pada modul Peta Sebaran Pekerjaan SDA (`/admin/pekerjaan-sda/map`), ditambahkan diferensiasi visual untuk mempermudah identifikasi pekerjaan yang bersumber dari aplikasi **Inventory**:
+
+1. **Custom Marker Pink:**
+   - Dibuatkan ikon pin Leaflet khusus berbasis SVG inline data URI dengan warna **Pink cerah (`#ec4899`)** dan border merah muda tua (`#be185d`).
+   - Setiap data `PekerjaanSda` dengan nilai `sumber_data = Inventory` (atau `Iventory`, case-insensitive) otomatis dirender menggunakan marker pink.
+2. **Pembaruan Panel Legenda:**
+   - Menambahkan indikator dot warna pink bertuliskan **Inventory** pada panel legenda di pojok kanan bawah peta:
+     - 🟣 Pink (`#ec4899`): **Inventory**
+     - 🟠 Orange (`#f97316`): **Reses**
+     - 🔵 Biru (`#3b82f6`): **Usulan Masyarakat**
+     - 🟢 Hijau (`#10b981`): **Pekerjaan Selesai**
+3. **Filter & Counter Interaktif:**
+   - Opsi `Inventory` ditambahkan pada dropdown filter *Sumber Data*.
+   - Counter jumlah pekerjaan Inventory ditampilkan di baris ringkasan judul peta: `<span id="inventory-count">0</span> Inventory`.
+   - Controller `PekerjaanSdaController::mapView` diperbarui untuk mendukung filter query `?sumber_data=Inventory` secara case-insensitive.
+
 ---
 
-## 6. Verifikasi & Deployment Server
+## 7. Verifikasi & Deployment Server
 
 Proses perilisan telah berhasil dilakukan ke server produksi:
-1. **Repository GitHub:** Branch `farizahmad.github.io` commit `691308a`.
+1. **Repository GitHub:** Branch `farizahmad.github.io` commit `691308a` (API update) dan commit `d7e1d13` (GIS Map update).
 2. **Server Host:** `145.79.14.233` (`app-reses.farizahmad.com`).
 3. **Database Integrity:**
    - Database server **100% aman** (hanya menjalankan migrasi skema tabel, tidak menimpa data yang ada).
@@ -150,8 +171,10 @@ Proses perilisan telah berhasil dilakukan ke server produksi:
 
 ---
 
-## 7. Referensi Berkas Terkait
+## 8. Referensi Berkas Terkait
 
+- **Peta Lokasi Blade:** [`resources/views/admin/pekerjaan-sda/map.blade.php`](file:///d:/program%20file/Project%20Kantor/App-Reses/resources/views/admin/pekerjaan-sda/map.blade.php)
+- **Controller Pekerjaan SDA:** [`app/Http/Controllers/Admin/PekerjaanSdaController.php`](file:///d:/program%20file/Project%20Kantor/App-Reses/app/Http/Controllers/Admin/PekerjaanSdaController.php)
 - **Postman Collection:** [`App-Reses-API.postman_collection.json`](file:///d:/program%20file/Project%20Kantor/App-Reses/App-Reses-API.postman_collection.json)
 - **API Controller Pekerjaan SDA:** [`PekerjaanSdaApiController.php`](file:///d:/program%20file/Project%20Kantor/App-Reses/app/Http/Controllers/Api/PekerjaanSdaApiController.php)
 - **API Controller Survei Reses:** [`SurveiResesApiController.php`](file:///d:/program%20file/Project%20Kantor/App-Reses/app/Http/Controllers/Api/SurveiResesApiController.php)
